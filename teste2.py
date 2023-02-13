@@ -2,19 +2,15 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import funções
 
-driver = webdriver.Chrome()
+pistas = funções.coleta_pistas()
 
-url ='https://greyhoundbet.racingpost.com/#meeting-list/view=meetings&r_date=2023-02-12'
-driver.get(url)
-
-html = driver.page_source
-
-soup = BeautifulSoup(html, 'html.parser')
-
-pistas = soup.find_all('a', {'data-eventid': 'cards_meetings_click'})
+print(len(pistas))
 
 links = []
 nome_pistas = []
+
+todas_races = []
+
 
 for i in range(1, len(pistas)):
     link = pistas[i]['href']
@@ -25,11 +21,10 @@ for i in range(1, len(pistas)):
     nome_pista = n_pista[:index ]
     nome_pistas.append(nome_pista)
 
-print(link[0])
-
-driver.quit()
+print(links[0])
 
 
 for i in range(1, len(links)):
+    corr = funções.coleta_races(links[i])
+    todas_races.append(corr)
 
-    funções.coleta_races(links[i])
