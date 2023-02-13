@@ -4,27 +4,34 @@ import funções
 
 pistas = funções.coleta_pistas()
 
-print(len(pistas))
+# print(len(pistas))
 
-links = []
-nome_pistas = []
+pistas_links = funções.coleta_links(pistas)
 
-todas_races = []
+# print(len(pistas_links))
 
+nomes_p = funções.coleta_pista_nomes(pistas)
 
-for i in range(1, len(pistas)):
-    link = pistas[i]['href']
-    links.append(link)
+# print(len(nomes_p))
 
-    n_pista = pistas[1].get_text().strip()
-    index = n_pista.find(' ')
-    nome_pista = n_pista[:index ]
-    nome_pistas.append(nome_pista)
+pistas_races = funções.coleta_races(pistas_links)
 
-print(links[0])
+# print(pistas_races[0][0])
 
+dogs = funções.coleta_dogs_race(pistas_races[0][1])
 
-for i in range(1, len(links)):
-    corr = funções.coleta_races(links[i])
-    todas_races.append(corr)
+print(len(dogs))
 
+# print(dogs[0])
+
+corridas = funções.coleta_hist_dog(dogs[0])
+
+# print(len(corridas))
+
+# print(corridas[0])
+
+l_corrida = funções.coleta_dados_corr(corridas[3])
+
+print(len(l_corrida))
+
+funções.dados_corrida(l_corrida)
