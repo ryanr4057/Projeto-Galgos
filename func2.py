@@ -8,8 +8,10 @@ def coleta_pistas(): #retorna um array contendo os objetos pistas
     link_das_pistas = []
     driver = webdriver.Chrome()
 
-    url ='https://greyhoundbet.racingpost.com/#meeting-list/view=meetings&r_date=2023-02-14'
+    url ='https://greyhoundbet.racingpost.com/#meeting-list/view=meetings&r_date=2023-02-16'
     driver.get(url)
+
+    time.sleep(1.5)
 
     html = driver.page_source
 
@@ -21,11 +23,9 @@ def coleta_pistas(): #retorna um array contendo os objetos pistas
         driver.quit()
         coleta_pistas()
 
-    def timer(seconds):
-        time.sleep(seconds)
-        driver.quit()
-
-    timer(0.7)
+    # def timer(seconds):
+    #     time.sleep(seconds)
+    #     driver.quit()
 
     link_das_pistas = (coleta_links(pistas))
 
@@ -73,34 +73,49 @@ def coleta_races_aux(races):
 
 #     return(pistas_races)
 
-def coleta_races(pista_link): #retorna um array com as races do link do parametro
-    pista_races = []
+def coleta_races(pistas_links): #retorna um array com as races do link do parametro
+    pistas_races = []
 
     driver = webdriver.Chrome()
 
-    url =f'https://greyhoundbet.racingpost.com/{pista_link}'
-    # print(url)
-    driver.get(url)
+    for i in range(0, len(pistas_links)):
 
-    html = driver.page_source
+        url =f'https://greyhoundbet.racingpost.com/{pistas_links[i]}'
+        # print(url)
 
-    soup = BeautifulSoup(html, 'html.parser')
+        driver.get(url)
 
-    races = soup.find_all('a', {'data-eventid': 'cards_card'})
+        driver.refresh
 
-    pista_races = coleta_races_aux(races)
+        time.sleep(1.5)
 
-    if pista_races == [] :
-        driver.quit()
-        pista_races = coleta_races(pista_link)
 
-    def timer(seconds):
-        time.sleep(seconds)
-        driver.quit()
+        html = driver.page_source
 
-    timer(0.7)
+        soup = BeautifulSoup(html, 'html.parser')
 
-    return(pista_races)
+        races = soup.find_all('a', {'data-eventid': 'cards_card'})
+
+        ra = coleta_races_aux(races)
+
+        print(ra)
+
+        pistas_races.append(ra)
+
+        if pistas_races == [] :
+            driver.quit()
+            pistas_races = coleta_races(pistas_links)
+
+        # def timer(seconds):
+        #     time.sleep(seconds)
+        #     driver.quit()
+
+        # timer(0.7)
+
+
+    driver.quit()
+
+    return(pistas_races)
 
 def executa_coleta_races(pistas_links):
     pistas_races = []
@@ -127,23 +142,33 @@ def coleta_pista_nomes(pistas):
         nome_pistas.append(nome_pista)
     return(nome_pistas)
 
-def coleta_dogs_race_aux1(race_link):
+def coleta_dogs_race_aux(pista_races_links): #recebe um array com os links das races de uma pista
+    pista_dogs = []
 
     driver = webdriver.Chrome()
 
-    url = f'https://greyhoundbet.racingpost.com/{race_link}'
-    # print(url)
-    driver.get(url)
+    for i in range(0, len(pista_races_links)):
 
-    html = driver.page_source
 
-    soup = BeautifulSoup(html, 'html.parser')
+        url = f'https://greyhoundbet.racingpost.com/{pista_races_links[i]}'
+        # print(url)
+        driver.get(url)
 
-    dogs = soup.find_all('div', {'class': 'runnerBlock'})
+        driver.refresh()
 
-    if dogs == [] :
-        driver.quit()
-        dogs = coleta_dogs_race_aux1(race_link)
+        time.sleep(0.7)
+
+        html = driver.page_source
+
+        soup = BeautifulSoup(html, 'html.parser')
+
+        dogs = soup.find_all('div', {'class': 'runnerBlock'})
+
+        pista_dogs.append(dogs)
+
+        if dogs == [] :
+            driver.quit()
+            dogs = coleta_dogs_race_aux1(pista_races_links)
 
     # def timer(seconds):
     #     time.sleep(seconds)
@@ -151,7 +176,7 @@ def coleta_dogs_race_aux1(race_link):
 
     # timer(5)
 
-    return(dogs)
+    return(pista_dogs)
 
 def coleta_dogs_race_aux2(pista_races):
     race_dogs = []
@@ -162,13 +187,13 @@ def coleta_dogs_race_aux2(pista_races):
         race_dogs.append(r_dogs)
     return(race_dogs)
 
-def coleta_dogs_races(pistas_races):
+def coleta_dogs_races(pistas_races): #recebe um array de arrays contendo os links das races das pistas
     pistas_dogs = []
 
-    for i in range(0, len(pistas_races)):
-        r_dogs = coleta_dogs_race_aux2(pistas_races[i])
+    for i in range(0, 1):
+        pista_dogs = coleta_dogs_race_aux(pistas_races[i])
         # print(pistas_races[i])
-        pistas_dogs.append(r_dogs)
+        pistas_dogs.append(pista_dogs)
 
     return(pistas_dogs)
 

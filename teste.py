@@ -1,24 +1,16 @@
-import requests
-from bs4 import BeautifulSoup
-from fake_useragent import UserAgent
+import teste2
 
-# Gerando um cabeçalho HTTP com informações de um navegador
-ua = UserAgent()
-headers = {'User-Agent': ua.random}
+op = 0
 
-# Página que vamos trabalhar
-url ='https://greyhoundbet.racingpost.com/#meeting-list/view=meetings&r_date=202 3-02-10'
+dados = []
 
-# Realizando a requisição à página
-site = requests.get(url, headers=headers)
+while op < 3:
 
-# Criando o objeto BeautifulSoup
-soup = BeautifulSoup(site.content, 'html.parser')
+    op = int(input("1- carregar dados 2- imprimir 3- sair"))
 
-# Procurando elementos com a tag 'a' e um atributo 'data-eventid="cards_meetings_click"'
-elementos = soup.find_all('a', {'data-eventid': 'cards_meetings_click'})
-
-print(elementos)
-
+    if op == 1:
+        teste2.carregar_dados(dados)
+    if op == 2:
+        print(dados[0][0][0][0][0][0])
 
 

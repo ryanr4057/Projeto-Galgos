@@ -1,0 +1,5 @@
+race_dogs = array de cachorros de cada race
+pistas_races = array de links de cada race
+pistas_dogs = array de race_dogs
+hist_dog = array dos dados das ultimas corridas
+dog_dados = array com info de todas suas races
