@@ -53,7 +53,7 @@ def coleta_races(pistas_links): #retorna um array com as races do link do parame
 
     driver = webdriver.Chrome()
 
-    for i in range(0, 1):
+    for i in range(0, len(pistas_links)):
 
         url =f'https://greyhoundbet.racingpost.com/{pistas_links[i]}'
         # print(url)
@@ -108,7 +108,7 @@ def coleta_pista_nomes(pistas):
         f_bd.inserir_pista(nome_pista)
 
 
-def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os links das races de uma pista
+def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os links das races de uma pist
     pista_dogs = []
 
     driver = webdriver.Chrome()
@@ -130,19 +130,98 @@ def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os l
 
         time.sleep(0.1)
 
-        tab = soup.find('div', {'id': 'sortContainer'})
+        top = soup.find('div', {'class': 'racePager'})
+        if top is None:
+            print("top erro")
+            tag = 'div'
+            t1 = 'class'
+            t2 = 'racePager'
+            top = v_campo(soup,driver,tag,t1,t2)
 
-        time.sleep(0.1)
+        h = top.find('h3', {'id': 'pagerCardTime'})
+        if h is None:
+            print("horario erro")
+            tag = 'h3'
+            t1 = 'id'
+            t2 = 'pagerCardTime'
+            h = v_campo(top,driver,tag,t1,t2)
+        horario = h.get_text().strip()
+
+        # if dogs is None:
+        #     driver.refresh()
+        #     time.sleep(0.1)
+        #     html = driver.page_source
+        #     soup = BeautifulSoup(html, 'html.parser')
+
+        #     dogs = v_dog(dogs, tab)
+
+        p = soup.find('p', {'class': 'p2'})
+        reser = 0
+        pick = "POST PICK: 0-0-0"
+
+
+        if p is None:
+            res = soup.find_all('b', {'class': 'reserve'})
+            if res is not None:
+                reser = 1
+
+            else:
+                print("pick erro")
+                tag = 'p'
+                t1 = 'class'
+                t2 = 'p2'
+                p = v_campo(soup,driver,tag,t1,t2)
+
+        if reser > 1:
+            pick = "POST PICK: 0-0-0"
+        if reser == 0:
+            pick = p.get_text().strip()
+
+
+        n = soup.find('span', {'class': 'titleColumn1'})
+        if n is None:
+            print("nome erro")
+            tag = 'span'
+            t1 = 'class'
+            t2 = 'titleColumn1'
+            n = v_campo(soup,driver,tag,t1,t2)
+        nome = n.get_text().strip()
+
+        t = soup.find('span', {'class': 'titleColumn2'})
+        if t is None:
+            print("txt erro")
+            tag = 'span'
+            t1 = 'class'
+            t2 = 'titleColumn2'
+            t = v_campo(soup,driver,tag,t1,t2)
+        txt = t.get_text().strip()
+
+        tab = soup.find('div', {'class': 'formTabContainer'})
+
+        if tab is None:
+            print(1)
+            tag = 'div'
+            t1 = 'class'
+            t2 = 'formTabContainer'
+            tab = v_campo(soup,driver,tag,t1,t2)
 
         dogs = tab.find_all('div', {'class': 'runnerBlock'})
 
-        nome = soup.find('span', {'class': 'titleColumn1'}).get_text().strip()
-        txt = soup.find('span', {'class': 'titleColumn2'}).get_text().strip()
-        horario = soup.find('h3', {'id': 'pagerCardTime'}).get_text().strip()
-        categoria = txt[:3].strip()
-        dis = txt[4:]
-        distancia = int(dis[:4])
+        if dogs is None:
+            print(2)
+            tag = 'div'
+            t1 = 'class'
+            t2 = 'runnerBlock'
+            dogs = v_campo_all(tab,driver,tag,t1,t2)
 
+        pi = pick[10:]
+        post_pick = pi[:6].strip()
+        categoria = txt[:3].strip()
+        dis = txt[5:]
+        if len(txt) == 15:
+            distancia = int(dis[:4])
+        else:
+            distancia = int(dis[:3])
 
 
         pista_dogs.append(dogs)
@@ -151,7 +230,7 @@ def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os l
             driver.quit()
             dogs = coleta_dogs_race_aux(pista_races_links)
 
-        f_bd.inserir_race(nome, categoria, distancia, horario, pista_id)
+        f_bd.inserir_race(nome, categoria, distancia, horario, post_pick, pista_id)
 
     # def timer(seconds):
     #     time.sleep(seconds)
@@ -277,3 +356,46 @@ def cria_bd():
     f_bd.criar_tabela_dogs()
     f_bd.criar_tabela_corrida()
 
+def v_dog(array, soup):
+    if array == []:
+        array = soup.find_all('div', {'class': 'runnerBlock'})
+        v_dog(array, soup)
+    return(array)
+
+def v_tab(array, driver):
+    driver.refresh()
+    time.sleep(0.1)
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+    array = soup.find('div', {'id': 'sortContainer'})
+
+    if array is None:
+        v_tab(array, driver)
+
+    return(array)
+
+def v_campo(array, driver, tag, t1, t2):
+    driver.refresh()
+    time.sleep(0.5)
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+    array = soup.find(tag, {t1: t2})
+    # print('{tag}', {'{t1}': '{t2}'})
+
+    if array is None:
+        v_campo(array, driver, tag, t1, t2)
+
+    return(array)
+
+def v_campo_all(array, driver, tag, t1, t2):
+    driver.refresh()
+    time.sleep(0.5)
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+    array = soup.find_all(tag, {t1: t2})
+    # print('{tag}', {'{t1}': '{t2}'})
+
+    if array is None:
+        v_campo_all(array, driver, tag, t1, t2)
+
+    return(array)

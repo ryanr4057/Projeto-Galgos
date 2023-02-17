@@ -39,14 +39,15 @@ def criar_tabela_races():
                     categoria TEXT,
                     distancia INTEGER,
                     horario TEXT,
+                    post_pick TEXT,
                     pista_id INTEGER,
                     FOREIGN KEY (pista_id) REFERENCES pistas(id)
                  )''')
     conn.commit()
 
 # Inserção de dados na tabela races
-def inserir_race(nome, categoria, distancia, horario, pista_id):
-    c.execute("INSERT INTO races (nome, categoria, distancia, horario, pista_id) VALUES (?, ?, ?, ?, ?)", (nome, categoria, distancia, horario, pista_id))
+def inserir_race(nome, categoria, distancia, horario, post_pick, pista_id):
+    c.execute("INSERT INTO races (nome, categoria, distancia, horario, post_pick, pista_id) VALUES (?, ?, ?, ?, ?, ?)", (nome, categoria, distancia, horario, post_pick, pista_id))
     conn.commit()
 
 # Edição de dados na tabela races

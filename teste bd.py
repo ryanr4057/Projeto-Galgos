@@ -10,7 +10,11 @@ pistas_links = funções_.coleta_pistas()
 
 # print(len(pistas_links))
 # print("   ")
+
+
 pistas_races = funções_.coleta_races(pistas_links)
+
+
 # print(len(pistas_races))
 # print("   ")
 
@@ -21,6 +25,7 @@ pistas_races = funções_.coleta_races(pistas_links)
 
 
 dogs = funções_.coleta_dogs_races(pistas_races)
+
 
 # for i in range(0, len(dogs)):
 #     print("   ")
