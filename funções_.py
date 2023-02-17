@@ -53,7 +53,7 @@ def coleta_races(pistas_links): #retorna um array com as races do link do parame
 
     driver = webdriver.Chrome()
 
-    for i in range(0, 2):
+    for i in range(0, 1):
 
         url =f'https://greyhoundbet.racingpost.com/{pistas_links[i]}'
         # print(url)
@@ -128,6 +128,13 @@ def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os l
 
         soup = BeautifulSoup(html, 'html.parser')
 
+        time.sleep(0.1)
+
+        tab = soup.find('div', {'id': 'sortContainer'})
+
+        time.sleep(0.1)
+
+        dogs = tab.find_all('div', {'class': 'runnerBlock'})
 
         nome = soup.find('span', {'class': 'titleColumn1'}).get_text().strip()
         txt = soup.find('span', {'class': 'titleColumn2'}).get_text().strip()
@@ -136,14 +143,7 @@ def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os l
         dis = txt[4:]
         distancia = int(dis[:4])
 
-        print(horario)
-        print(nome)
-        print(categoria)
-        print(distancia)
 
-        tab = soup.find('div', {'id': 'sortContainer'})
-
-        dogs = tab.find_all('div', {'class': 'runnerBlock'})
 
         pista_dogs.append(dogs)
 
@@ -165,15 +165,22 @@ def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os l
 def coleta_dogs_races(pistas_races): #recebe um array de arrays contendo os links das races das pistas
     pistas_dogs = []
 
-    for i in range(0, 2):
+    for i in range(0, len(pistas_races)):
         pista_dogs = coleta_dogs_race_aux(pistas_races[i], (i + 1))
         # print(pistas_races[i])
         pistas_dogs.append(pista_dogs)
 
     return(pistas_dogs)
 
-def coleta_hist_dog_aux(dog):
+def coleta_hist_dog_aux(dog, race_id):
     dog_dados = []
+    d_nome = dog.find('strong', {}).get_text()
+    t = dog.find('i', {})
+    tr = (t)['class']
+    trap = int((tr[1])[4])
+    # print(trap)
+    # print(d_nome)
+    # print(race_id)
     t_corridas = dog.find('table', {'class': 'formGrid desktop'})
     # print(t_corridas)
     l_corridas = t_corridas.find_all('tr', {})
@@ -183,6 +190,8 @@ def coleta_hist_dog_aux(dog):
     for i in range(1, len(l_corridas)):
         l_corrida = l_corridas[i].find_all('td',{})
         dog_dados.append(dados_corrida_aux(l_corrida))
+
+    f_bd.inserir_dog(d_nome, trap, race_id)
 
     return(dog_dados)
 
@@ -235,17 +244,17 @@ def dados_corrida_aux(r_dados):
     # print(tempo)
     # print(pos)
 
-def coleta_hist_aux1(r_dogs):
+def coleta_hist_aux1(r_dogs,race_id):
     race_dogs = []
     for i in range(0, len(r_dogs)):
-        h_dog = coleta_hist_dog_aux(r_dogs[i])
+        h_dog = coleta_hist_dog_aux(r_dogs[i], race_id)
         race_dogs.append(h_dog)
     return(race_dogs)
 
 def coleta_hist_aux2(races_dogs):
     race_dogs = []
     for i in range(0, len(races_dogs)):
-        h_dog = coleta_hist_aux1(races_dogs[i])
+        h_dog = coleta_hist_aux1(races_dogs[i], (i+1))
         race_dogs.append(h_dog)
     return(race_dogs)
 
@@ -261,6 +270,5 @@ def cria_bd():
     f_bd.criar_tabela_pistas()
     f_bd.criar_tabela_races()
     f_bd.criar_tabela_dogs()
-    f_bd.criar_tabela_historico()
     f_bd.criar_tabela_corrida()
 

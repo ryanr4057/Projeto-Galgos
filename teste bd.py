@@ -31,7 +31,7 @@ dogs = funções_.coleta_dogs_races(pistas_races)
 # # print(len(dogs))
 
 
-# dog_dados = funções_.coleta_hist(dogs)
+dog_dados = funções_.coleta_hist(dogs)
 
 # # print(len(dog_dados))
 

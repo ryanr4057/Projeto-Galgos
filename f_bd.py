@@ -65,14 +65,15 @@ def criar_tabela_dogs():
     c.execute('''CREATE TABLE dogs (
                     id INTEGER PRIMARY KEY,
                     nome TEXT,
+                    trap INTEGER,
                     race_id INTEGER,
                     FOREIGN KEY (race_id) REFERENCES races(id)
                  )''')
     conn.commit()
 
 # Inserção de dados na tabela dogs
-def inserir_dog(nome, race_id):
-    c.execute("INSERT INTO dogs (nome, race_id) VALUES (?, ?)", (nome, race_id))
+def inserir_dog(nome, trap, race_id):
+    c.execute("INSERT INTO dogs (nome, trap, race_id) VALUES (?, ?, ?)", (nome, trap, race_id))
     conn.commit()
 
 # Edição de dados na tabela dogs
@@ -85,28 +86,6 @@ def apagar_dog(id):
     c.execute("DELETE FROM dogs WHERE id = ?", (id,))
     conn.commit()
 
-
-# Criação da tabela histórico
-def criar_tabela_historico():
-    c.execute('''CREATE TABLE historico (
-                    id INTEGER PRIMARY KEY,
-                    dog_id INTEGER,
-                    FOREIGN KEY (dog_id) REFERENCES dogs(id)
-                 )''')
-    conn.commit()
-
-# Inserção de dados na tabela histórico
-def inserir_historico(dog_id):
-    c.execute("INSERT INTO historico (dog_id) VALUES (?)", (dog_id,))
-    conn.commit()
-
-# Edição de dados na tabela histórico
-def editar_historico(id, novo_dog_id):
-    c.execute("UPDATE historico SET dog_id = ? WHERE id = ?", (novo_dog_id, id))
-    conn.commit()
-
-# Apagar dados na tabela histórico
-def apagar_historico(id):
     c.execute("DELETE FROM historico WHERE id = ?", (id,))
     conn.commit()
 
@@ -124,14 +103,14 @@ def criar_tabela_corrida():
                     categoria TEXT,
                     tempo REAL,
                     posicao TEXT,
-                    historico_id INTEGER,
-                    FOREIGN KEY (historico_id) REFERENCES historico(id)
+                    dog_id INTEGER,
+                    FOREIGN KEY (dog_id) REFERENCES dogs(id)
                  )''')
     conn.commit()
 
 # Inserção de dados na tabela corrida
-def inserir_corrida(data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, historico_id):
-    c.execute("INSERT INTO corrida (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, historico_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, historico_id))
+def inserir_corrida(data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, dog_id):
+    c.execute("INSERT INTO corrida (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, dog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, dog_id))
     conn.commit()
 
 # Edição de dados na tabela corrida
