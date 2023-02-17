@@ -123,6 +123,14 @@ def apagar_corrida(id):
     c.execute("DELETE FROM corrida WHERE id = ?", (id,))
     conn.commit()
 
+def buscar_id_pelo_nome(nome):
+    c.execute("SELECT id FROM dogs WHERE nome = ?", (nome,))
+    resultado = c.fetchone()
+    if resultado is not None:
+        return resultado[0]
+    else:
+        return None
+
 # # Exemplo de uso das funções
 # criar_tabela_pistas()
 # criar_tabela_races()

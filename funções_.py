@@ -187,15 +187,16 @@ def coleta_hist_dog_aux(dog, race_id):
     # print(len(l_corridas))
     n = len(l_corridas) - 1
 
+    f_bd.inserir_dog(d_nome, trap, race_id)
+
     for i in range(1, len(l_corridas)):
         l_corrida = l_corridas[i].find_all('td',{})
-        dog_dados.append(dados_corrida_aux(l_corrida))
+        dog_dados.append(dados_corrida_aux(l_corrida, d_nome))
 
-    f_bd.inserir_dog(d_nome, trap, race_id)
 
     return(dog_dados)
 
-def dados_corrida_aux(r_dados):
+def dados_corrida_aux(r_dados, d_nome):
     hist_dog = []
     race = []
 
@@ -230,6 +231,10 @@ def dados_corrida_aux(r_dados):
     race.append(pos)
 
     hist_dog = race
+
+    dog_id = f_bd.buscar_id_pelo_nome(d_nome)
+
+    f_bd.inserir_corrida(data, pista, dist, trap, split, bends, peso, cat, tempo, pos, dog_id)
 
     return(hist_dog)
 
