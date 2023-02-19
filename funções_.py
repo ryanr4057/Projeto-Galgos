@@ -101,12 +101,17 @@ def coleta_links(pistas):
     return(links)
 
 def coleta_pista_nomes(pistas):
+    pistas_coletadas = []
     for i in range(0, len(pistas)):
         n_pista = pistas[i].get_text().strip()
         index = n_pista.find(' ')
         nome_pista = n_pista[:index ]
-        f_bd.inserir_pista(nome_pista)
+        for j in range(0, len(pistas_coletadas)):
+            if nome_pista == pistas_coletadas[j]:
+                nome_pista = f"{nome_pista} 2"
 
+        f_bd.inserir_pista(nome_pista)
+        pistas_coletadas.append(nome_pista)
 
 def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os links das races de uma pist
     pista_dogs = []
@@ -122,7 +127,7 @@ def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os l
 
         driver.refresh()
 
-        time.sleep(0.7)
+        time.sleep(0.5)
 
         html = driver.page_source
 
@@ -244,10 +249,13 @@ def coleta_dogs_race_aux(pista_races_links, pista_id): #recebe um array com os l
 def coleta_dogs_races(pistas_races): #recebe um array de arrays contendo os links das races das pistas
     pistas_dogs = []
 
+
     for i in range(0, len(pistas_races)):
         pista_dogs = coleta_dogs_race_aux(pistas_races[i], (i + 1))
         # print(pistas_races[i])
         pistas_dogs.append(pista_dogs)
+
+
 
     return(pistas_dogs)
 
@@ -266,7 +274,7 @@ def coleta_hist_dog_aux(dog, race_id):
     # print(len(l_corridas))
     n = len(l_corridas) - 1
 
-    f_bd.inserir_dog(d_nome, trap, race_id)
+    f_bd.inserir_dog(d_nome, trap, race_id + 1)
 
     for i in range(1, len(l_corridas)):
         l_corrida = l_corridas[i].find_all('td',{})
@@ -279,10 +287,23 @@ def dados_corrida_aux(r_dados, d_nome):
     hist_dog = []
     race = []
 
-    data = 1
+
+    t = r_dados[0].find('a', {})
+
+    if t is None:
+        data = r_dados[0].get_text().strip()
+    else:
+        data = t.get_text().strip()
+
     pista = r_dados[1].get_text().strip()
     distan = r_dados[2].get_text()
-    dist = int(distan[:3])
+    if len(distan) >= 4:
+        dist = int(distan[:3])
+    elif len(distan) == 3:
+         dist = int(distan[:2])
+    elif len(distan) == 2:
+         dist = int(distan[:1])
+
     tra = r_dados[3].get_text()
     trap = int(tra[1])
     split = 0
@@ -293,6 +314,7 @@ def dados_corrida_aux(r_dados, d_nome):
     cat = r_dados[14].get_text().strip()
     tempo = float(r_dados[15].get_text())
     pos = r_dados[6].get_text().strip()
+    remarks = r_dados[9].get_text().strip()
     # if len(pos) > 0:
     #     po = int(pos[0])
     #     if (po == 1) or (po == 2) or (po == 3) or (po == 4) or (po == 5) or (po == 6):
@@ -308,12 +330,14 @@ def dados_corrida_aux(r_dados, d_nome):
     race.append(cat)
     race.append(tempo)
     race.append(pos)
+    race.append(remarks)
+
 
     hist_dog = race
 
     dog_id = f_bd.buscar_id_pelo_nome(d_nome)
 
-    f_bd.inserir_corrida(data, pista, dist, trap, split, bends, peso, cat, tempo, pos, dog_id)
+    f_bd.inserir_corrida(data, pista, dist, trap, split, bends, peso, cat, tempo, pos, remarks, dog_id)
 
     return(hist_dog)
 
@@ -328,26 +352,43 @@ def dados_corrida_aux(r_dados, d_nome):
     # print(tempo)
     # print(pos)
 
-def coleta_hist_aux1(r_dogs,race_id):
+def coleta_hist_aux1(r_dogs, count2):
     race_dogs = []
+    # count2 = count
     for i in range(0, len(r_dogs)):
-        h_dog = coleta_hist_dog_aux(r_dogs[i], race_id)
+        h_dog = coleta_hist_dog_aux(r_dogs[i], count2 )
         race_dogs.append(h_dog)
     return(race_dogs)
 
-def coleta_hist_aux2(races_dogs):
+def coleta_hist_aux2(races_dogs, count):
     race_dogs = []
+    count2 = count
     for i in range(0, len(races_dogs)):
-        h_dog = coleta_hist_aux1(races_dogs[i], (i+1))
+        h_dog = coleta_hist_aux1(races_dogs[i], count2)
         race_dogs.append(h_dog)
+        count2 = count2 + 1
+        print(f"incremento no count2:{count2}")
     return(race_dogs)
 
 def coleta_hist(dogs):
     race_dogs = []
+    count = 0
+    co = 0
 
     for i in range(0, len(dogs)):
-        h_dog = coleta_hist_aux2(dogs[i])
+        if i != 0:
+            count = count + len(dogs[i - 1])
+            print(f"incremento no count:{count}")
+
+
+
+        h_dog = coleta_hist_aux2(dogs[i], count)
         race_dogs.append(h_dog)
+
+
+        # for j in range(0,len(dogs[i])):
+        #     co = co + 1
+        # count = count + co
     return(race_dogs)
 
 def cria_bd():
@@ -355,24 +396,10 @@ def cria_bd():
     f_bd.criar_tabela_races()
     f_bd.criar_tabela_dogs()
     f_bd.criar_tabela_corrida()
+    d = coleta_hist(coleta_dogs_races(coleta_races(coleta_pistas())))
 
-def v_dog(array, soup):
-    if array == []:
-        array = soup.find_all('div', {'class': 'runnerBlock'})
-        v_dog(array, soup)
-    return(array)
+    # return(d)
 
-def v_tab(array, driver):
-    driver.refresh()
-    time.sleep(0.1)
-    html = driver.page_source
-    soup = BeautifulSoup(html, 'html.parser')
-    array = soup.find('div', {'id': 'sortContainer'})
-
-    if array is None:
-        v_tab(array, driver)
-
-    return(array)
 
 def v_campo(array, driver, tag, t1, t2):
     driver.refresh()
@@ -399,3 +426,7 @@ def v_campo_all(array, driver, tag, t1, t2):
         v_campo_all(array, driver, tag, t1, t2)
 
     return(array)
+
+def dados():
+    d = coleta_hist(coleta_dogs_races(coleta_races(coleta_pistas())))
+    return(d)

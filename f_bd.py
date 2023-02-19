@@ -104,14 +104,15 @@ def criar_tabela_corrida():
                     categoria TEXT,
                     tempo REAL,
                     posicao TEXT,
+                    remarks TEXT,
                     dog_id INTEGER,
                     FOREIGN KEY (dog_id) REFERENCES dogs(id)
                  )''')
     conn.commit()
 
 # Inserção de dados na tabela corrida
-def inserir_corrida(data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, dog_id):
-    c.execute("INSERT INTO corrida (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, dog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, dog_id))
+def inserir_corrida(data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, remarks, dog_id):
+    c.execute("INSERT INTO corrida (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, remarks, dog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao,remarks, dog_id))
     conn.commit()
 
 # Edição de dados na tabela corrida
