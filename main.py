@@ -89,8 +89,12 @@ while True:
                 janela_secundaria.un_hide()  # Mostrando a janela principal novamente
                 janela_ter.hide()
                 break
-            elif evento2 == 'comparar':
-                print("comparação")
+            elif evento3 == 'Comparar':
+                dist = f_busca.buscar_race_dist(id_race)
+                dog_A = valores3['-COMBO-']
+                dog_B = valores3['-COMBO2-']
+
+                fun.compara(dist[0], dog_A, dog_B)
 
 
             # opcao_escolhida = valores2['-COMBO-']

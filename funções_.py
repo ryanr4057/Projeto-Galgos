@@ -5,6 +5,7 @@ import time
 import sqlite3
 from datetime import datetime
 import f_bd
+import f_busca
 
 #funções de coleta para pistas
 def coleta_pistas():
@@ -350,3 +351,24 @@ def dados():
 
 #funções de comparação
 
+def compara(race_dist, dog_A, dog_B):
+    dog_a = f_busca.buscar_dog_nome(dog_A)
+    dog_b = f_busca.buscar_dog_nome(dog_B)
+
+    id_a = dog_a[0]
+    id_b = dog_b[0]
+
+    trap_a = dog_a[2]
+    trap_b = dog_b[2]
+
+    nome_a = dog_a[1]
+    nome_b = dog_b[1]
+
+    hist_a = f_busca.buscar_corridas_por_dog_dist(id_a, race_dist)
+    hist_b = f_busca.buscar_corridas_por_dog_dist(id_b, race_dist)
+
+
+
+    print(hist_a[0][0])
+    print(hist_b[0][1])
+    # print(race_dist)

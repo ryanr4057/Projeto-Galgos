@@ -26,6 +26,10 @@ def buscar_race(id):
     c.execute("SELECT * FROM races WHERE id = ?", (id,))
     return c.fetchone()
 
+def buscar_race_dist(id):
+    c.execute("SELECT distancia FROM races WHERE id = ?", (id))
+    return c.fetchone()
+
 def buscar_race_id(pista_id,nome):
     c.execute("SELECT id FROM races WHERE pista_id = ? AND nome = ?", (pista_id, nome))
     return c.fetchone()
@@ -42,6 +46,10 @@ def buscar_races_por_pista(pista_id):
 # Busca de elementos na tabela dogs
 def buscar_dog(id):
     c.execute("SELECT * FROM dogs WHERE id = ?", (id,))
+    return c.fetchone()
+
+def buscar_dog_nome(nome):
+    c.execute("SELECT * FROM dogs WHERE nome = ?", (nome,))
     return c.fetchone()
 
 def buscar_todos_dogs():
@@ -64,8 +72,8 @@ def buscar_corrida(id):
     c.execute("SELECT * FROM corrida WHERE id = ?", (id,))
     return c.fetchone()
 
-def buscar_corridas_por_historico(historico_id):
-    c.execute("SELECT * FROM corrida WHERE historico_id = ?", (historico_id,))
+def buscar_corridas_por_dog_dist(dog_id, dist):
+    c.execute("SELECT * FROM corrida WHERE dog_id = ?  AND distancia = ?", (dog_id, dist))
     return c.fetchall()
 
 
