@@ -217,7 +217,19 @@ def coleta_hist_dog_aux(dog, race_id):
     l_corridas = t_corridas.find_all('tr', {})
     n = len(l_corridas) - 1
 
-    f_bd.inserir_dog(d_nome, trap, race_id + 1)
+    te = dog.find('td', {'class': 'brt'}).get_text().strip()
+    tex = te[5:].strip()
+
+    if len(tex) < 5:
+        tex = '00.00 A0 (00FFF00)'
+
+    d_brt = tex[9:].strip()
+    dat_brt = d_brt.replace("(", "")
+    data_brt = dat_brt.replace(")", "")
+
+    tempo_brt = float(tex[:5])
+
+    f_bd.inserir_dog(d_nome, trap, data_brt, tempo_brt, race_id + 1)
 
     for i in range(1, len(l_corridas)):
         l_corrida = l_corridas[i].find_all('td',{})
@@ -229,6 +241,7 @@ def dados_corrida_aux(r_dados, d_nome):
     hist_dog = []
     race = []
     split = 0
+    vel_media = 0
 
     t = r_dados[0].find('a', {})
     if t is None:
@@ -258,6 +271,8 @@ def dados_corrida_aux(r_dados, d_nome):
     tempo = float(r_dados[15].get_text())
     pos = r_dados[6].get_text().strip()
     remarks = r_dados[9].get_text().strip()
+    if tempo > 0:
+        vel_media = round((dist/tempo), 2)
 
     race.append(data)
     race.append(pista)
@@ -275,7 +290,7 @@ def dados_corrida_aux(r_dados, d_nome):
 
     dog_id = f_bd.buscar_id_pelo_nome(d_nome)
 
-    f_bd.inserir_corrida(data, pista, dist, trap, split, bends, peso, cat, tempo, pos, remarks, dog_id)
+    f_bd.inserir_corrida(data, pista, dist, trap, split, bends, peso, cat, tempo, vel_media, pos, remarks, dog_id)
 
     return(hist_dog)
 
@@ -355,6 +370,17 @@ def compara(race_dist, dog_A, dog_B):
     dog_a = f_busca.buscar_dog_nome(dog_A)
     dog_b = f_busca.buscar_dog_nome(dog_B)
 
+    splits_a = []
+    tempos_a = []
+    pos_a = []
+    pos_1bend_a = []
+
+
+
+
+    splits = []
+
+
     id_a = dog_a[0]
     id_b = dog_b[0]
 
@@ -367,8 +393,12 @@ def compara(race_dist, dog_A, dog_B):
     hist_a = f_busca.buscar_corridas_por_dog_dist(id_a, race_dist)
     hist_b = f_busca.buscar_corridas_por_dog_dist(id_b, race_dist)
 
+    peso_a = hist_a[len(hist_a) - 1][7]
+    peso_b = hist_b[len(hist_b) - 1][7]
+
+    # for i in range(0, len(hist_a)):
 
 
-    print(hist_a[0][0])
-    print(hist_b[0][1])
+    print(peso_a)
+    # print(hist_b[0][1])
     # print(race_dist)

@@ -67,14 +67,16 @@ def criar_tabela_dogs():
                     id INTEGER PRIMARY KEY,
                     nome TEXT,
                     trap INTEGER,
+                    data_brt TEXT,
+                    tempo_brt REAL,
                     race_id INTEGER,
                     FOREIGN KEY (race_id) REFERENCES races(id)
                  )''')
     conn.commit()
 
 # Inserção de dados na tabela dogs
-def inserir_dog(nome, trap, race_id):
-    c.execute("INSERT INTO dogs (nome, trap, race_id) VALUES (?, ?, ?)", (nome, trap, race_id))
+def inserir_dog(nome, trap,  data_brt, tempo_brt, race_id):
+    c.execute("INSERT INTO dogs (nome, trap, data_brt, tempo_brt, race_id) VALUES (?, ?, ?, ?, ?)", (nome, trap, data_brt, tempo_brt, race_id))
     conn.commit()
 
 # Edição de dados na tabela dogs
@@ -103,6 +105,7 @@ def criar_tabela_corrida():
                     peso REAL,
                     categoria TEXT,
                     tempo REAL,
+                    velocidade_media REAL,
                     posicao TEXT,
                     remarks TEXT,
                     dog_id INTEGER,
@@ -111,8 +114,8 @@ def criar_tabela_corrida():
     conn.commit()
 
 # Inserção de dados na tabela corrida
-def inserir_corrida(data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, remarks, dog_id):
-    c.execute("INSERT INTO corrida (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao, remarks, dog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (data, pista, distancia, trap, split, bends, peso, categoria, tempo, posicao,remarks, dog_id))
+def inserir_corrida(data, pista, distancia, trap, split, bends, peso, categoria, tempo, velocidade_media, posicao, remarks, dog_id):
+    c.execute("INSERT INTO corrida (data, pista, distancia, trap, split, bends, peso, categoria, tempo, velocidade_media, posicao, remarks, dog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (data, pista, distancia, trap, split, bends, peso, categoria, tempo, velocidade_media, posicao,remarks, dog_id))
     conn.commit()
 
 # Edição de dados na tabela corrida
