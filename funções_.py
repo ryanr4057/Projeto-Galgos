@@ -265,7 +265,8 @@ def dados_corrida_aux(r_dados, d_nome):
     if (r_dados[4].get_text()) != '':
         split = float(r_dados[4].get_text())
 
-    bends = r_dados[5].get_text().strip()
+    ben = r_dados[5].get_text().strip()
+    bends = ben.replace("-", "")
     peso = float(r_dados[12].get_text())
     cat = r_dados[14].get_text().strip()
     tempo = float(r_dados[15].get_text())
@@ -370,35 +371,114 @@ def compara(race_dist, dog_A, dog_B):
     dog_a = f_busca.buscar_dog_nome(dog_A)
     dog_b = f_busca.buscar_dog_nome(dog_B)
 
+    # id_a = dog_a[0]
+    # id_b = dog_b[0]
+
+    hist_a = f_busca.buscar_corridas_por_dog_dist(dog_a[0], race_dist)
+    hist_b = f_busca.buscar_corridas_por_dog_dist(dog_b[0], race_dist)
+
     splits_a = []
     tempos_a = []
     pos_a = []
     pos_1bend_a = []
+    vel_media_a = []
+    rec_cansa_a = []
+    splits_fin_a = []
+
+    splits_b = []
+    tempos_b = []
+    pos_b = []
+    pos_1bend_b = []
+    vel_media_b = []
+    rec_cansa_b = []
+    splits_fin_b = []
+
+    for i in range(0, len(hist_a)):
+        splits_a.append(hist_a[i][5])
+        tempos_a.append(hist_a[i][9])
+        if len(hist_a[i][11]) > 0:
+            po = int(hist_b[i][11][0])
+        else:
+            po = 0
+        pos_a.append(po)
+        vel_media_a.append(hist_a[i][10])
+
+        bends = hist_a[i][6]
+        rec_c = 0
+        bend1 = 0
+
+        if len(bends) > 0:
+            bend1 = int(bends[0])
+            ultbend = int(bends[len(bends) - 1])
+            rec_c = bend1 - ultbend
+            split_fin = int(bends[len(bends) - 2]) - int(bends[len(bends) - 1])
+
+        pos_1bend_a.append(bend1)
+        rec_cansa_a.append(rec_c)
+        splits_fin_a.append(split_fin)
+
+    for i in range(0, len(hist_b)):
+        splits_b.append(hist_b[i][5])
+        tempos_b.append(hist_b[i][9])
+        if len(hist_b[i][11]) > 0:
+            po = int(hist_b[i][11][0])
+        else:
+            po = 0
+        pos_b.append(po)
+        vel_media_b.append(hist_b[i][10])
+
+        bends = hist_b[i][6]
+        rec_c = 0
+        bend1 = 0
+
+        if len(bends) > 0:
+            bend1 = int(bends[0])
+            ultbend = int(bends[len(bends) - 1])
+            rec_c = bend1 - ultbend
+            split_fin = int(bends[len(bends) - 2]) - int(bends[len(bends) - 1])
+
+        pos_1bend_b.append(bend1)
+        rec_cansa_b.append(rec_c)
+        splits_fin_b.append(split_fin)
 
 
-
-
-    splits = []
-
-
-    id_a = dog_a[0]
-    id_b = dog_b[0]
-
-    trap_a = dog_a[2]
-    trap_b = dog_b[2]
 
     nome_a = dog_a[1]
+    trap_a = dog_a[2]
+    peso_a = hist_a[0][7]
+    m_split_a = calcula_media(splits_a)
+    m_tempos_a = calcula_media(tempos_a)
+    m_pos_a = calcula_media(pos_a)
+    m_1bend_a = calcula_media(pos_1bend_a)
+    m_vel_med_a = calcula_media(vel_media_a)
+    m_rec_cansa_a = calcula_media(rec_cansa_a)
+    m_split_fin_a = calcula_media(splits_fin_a)
+    dias_sem_correr_a = abs(diferenca_em_dias(hist_a[0][1]))
+
+    # print(trap_a, nome_a, peso_a ,m_split_a, m_tempos_a, m_pos_a, m_1bend_a,m_vel_med_a,m_rec_cansa_a,m_split_fin_a, dias_sem_correr_a   )
+
     nome_b = dog_b[1]
+    trap_b = dog_b[2]
+    peso_b = hist_b[0][7]
+    m_split_b = calcula_media(splits_b)
+    m_tempos_b = calcula_media(tempos_b)
+    m_pos_b = calcula_media(pos_b)
+    m_1bend_b = calcula_media(pos_1bend_b)
+    m_vel_med_b = calcula_media(vel_media_b)
+    m_rec_cansa_b = calcula_media(rec_cansa_b)
+    m_split_fin_b = calcula_media(splits_fin_b)
+    dias_sem_correr_b = abs(diferenca_em_dias(hist_b[0][1]))
 
-    hist_a = f_busca.buscar_corridas_por_dog_dist(id_a, race_dist)
-    hist_b = f_busca.buscar_corridas_por_dog_dist(id_b, race_dist)
+def calcula_media(array):
+    total = 0
+    for i in range(0, len(array)):
+        total = total + array[i]
+    media = round(total/len(array), 2)
+    return(media)
 
-    peso_a = hist_a[len(hist_a) - 1][7]
-    peso_b = hist_b[len(hist_b) - 1][7]
+def diferenca_em_dias(data_string):
+    data_atual = datetime.now().date()
+    data = datetime.strptime(data_string, '%d%b%y').date()
+    diferenca = data - data_atual
+    return diferenca.days
 
-    # for i in range(0, len(hist_a)):
-
-
-    print(peso_a)
-    # print(hist_b[0][1])
-    # print(race_dist)

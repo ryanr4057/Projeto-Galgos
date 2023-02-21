@@ -18,7 +18,7 @@ janela_principal = sg.Window('PISTAS', layout, size=(400, 200))
 
 # Criando a segunda janela
 layout2 = [[sg.Text('Escolha a Race:')],
-           [sg.Combo([], key='-COMBO-', size=35)],
+           [sg.Combo([], key='-COMBO-', size=20)],
            [sg.Button('Selecionar Race'), sg.Button('Voltar')]]
 
 janela_secundaria = None

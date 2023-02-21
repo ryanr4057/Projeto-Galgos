@@ -76,8 +76,6 @@ def buscar_corridas_por_dog_dist(dog_id, dist):
     c.execute("SELECT * FROM corrida WHERE dog_id = ?  AND distancia = ?", (dog_id, dist))
     return c.fetchall()
 
-
-
 def buscar_id_pelo_nome(nome):
     conn = sqlite3.connect('nome_do_banco.db')
     c = conn.cursor()
