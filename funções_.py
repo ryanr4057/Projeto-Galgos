@@ -368,11 +368,11 @@ def dados():
 #funções de comparação
 
 def compara(race_dist, dog_A, dog_B):
+    d_dog_a = []
+    d_dog_b = []
+
     dog_a = f_busca.buscar_dog_nome(dog_A)
     dog_b = f_busca.buscar_dog_nome(dog_B)
-
-    # id_a = dog_a[0]
-    # id_b = dog_b[0]
 
     hist_a = f_busca.buscar_corridas_por_dog_dist(dog_a[0], race_dist)
     hist_b = f_busca.buscar_corridas_por_dog_dist(dog_b[0], race_dist)
@@ -397,7 +397,7 @@ def compara(race_dist, dog_A, dog_B):
         splits_a.append(hist_a[i][5])
         tempos_a.append(hist_a[i][9])
         if len(hist_a[i][11]) > 0:
-            po = int(hist_b[i][11][0])
+            po = int(hist_a[i][11][0])
         else:
             po = 0
         pos_a.append(po)
@@ -441,13 +441,13 @@ def compara(race_dist, dog_A, dog_B):
         rec_cansa_b.append(rec_c)
         splits_fin_b.append(split_fin)
 
-
-
     nome_a = dog_a[1]
     trap_a = dog_a[2]
     peso_a = hist_a[0][7]
     m_split_a = calcula_media(splits_a)
     m_tempos_a = calcula_media(tempos_a)
+    var_med_tempo_a = calcula_variacao_media(tempos_a)
+
     m_pos_a = calcula_media(pos_a)
     m_1bend_a = calcula_media(pos_1bend_a)
     m_vel_med_a = calcula_media(vel_media_a)
@@ -455,19 +455,52 @@ def compara(race_dist, dog_A, dog_B):
     m_split_fin_a = calcula_media(splits_fin_a)
     dias_sem_correr_a = abs(diferenca_em_dias(hist_a[0][1]))
 
-    # print(trap_a, nome_a, peso_a ,m_split_a, m_tempos_a, m_pos_a, m_1bend_a,m_vel_med_a,m_rec_cansa_a,m_split_fin_a, dias_sem_correr_a   )
+    d_dog_a.append(trap_a)
+    d_dog_a.append(nome_a)
+    d_dog_a.append(dias_sem_correr_a)
+    d_dog_a.append(peso_a )
+    d_dog_a.append(m_split_a)
+    d_dog_a.append(m_1bend_a)
+    d_dog_a.append(m_pos_a)
+    d_dog_a.append(m_tempos_a)
+    d_dog_a.append(var_med_tempo_a)
+    d_dog_a.append(m_vel_med_a)
+    d_dog_a.append(m_rec_cansa_a)
+    d_dog_a.append(m_split_fin_a )
+
+    # print(d_dog_a)
 
     nome_b = dog_b[1]
     trap_b = dog_b[2]
     peso_b = hist_b[0][7]
     m_split_b = calcula_media(splits_b)
     m_tempos_b = calcula_media(tempos_b)
+    var_med_tempo_b = calcula_variacao_media(tempos_b)
     m_pos_b = calcula_media(pos_b)
     m_1bend_b = calcula_media(pos_1bend_b)
     m_vel_med_b = calcula_media(vel_media_b)
     m_rec_cansa_b = calcula_media(rec_cansa_b)
     m_split_fin_b = calcula_media(splits_fin_b)
     dias_sem_correr_b = abs(diferenca_em_dias(hist_b[0][1]))
+
+    d_dog_b.append(trap_b)
+    d_dog_b.append(nome_b)
+    d_dog_b.append(dias_sem_correr_b)
+    d_dog_b.append(peso_b )
+    d_dog_b.append(m_split_b)
+    d_dog_b.append(m_1bend_b)
+    d_dog_b.append(m_pos_b)
+    d_dog_b.append(m_tempos_b)
+    d_dog_b.append(var_med_tempo_b)
+    d_dog_b.append(m_vel_med_b)
+    d_dog_b.append(m_rec_cansa_b)
+    d_dog_b.append(m_split_fin_b )
+
+    # print(d_dog_b)
+
+    venc = compara_dif(d_dog_a, d_dog_b)
+
+    return(d_dog_a, d_dog_b, venc)
 
 def calcula_media(array):
     total = 0
@@ -481,4 +514,113 @@ def diferenca_em_dias(data_string):
     data = datetime.strptime(data_string, '%d%b%y').date()
     diferenca = data - data_atual
     return diferenca.days
+
+def calcula_variacao_media(arr):
+    soma_variacoes = 0
+    for i in range(1, len(arr)):
+        variacao = abs(arr[i] - arr[i-1])
+        soma_variacoes += variacao
+
+    if (len(arr) - 1) > 0:
+        variacao_media = soma_variacoes / (len(arr) - 1)
+    else:
+        variacao_media = 0
+
+    return round(variacao_media, 2)
+
+
+def compara_dif(d_dog_a, d_dog_b):
+    a = d_dog_a
+    b = d_dog_b
+    tot_a = 0
+    tot_b = 0
+    venc = []
+
+    #dias sem correr
+    if a[2] > b[2]:
+        venc.append(b[0])
+    elif a[2] < b[2]:
+        venc.append(a[0])
+    else:
+        venc.append(0)
+
+    #peso
+    if a[3] > b[3]:
+        venc.append(a[0])
+    elif a[3] < b[3]:
+        venc.append(b[0])
+    else:
+        venc.append(0)
+
+    #split
+    if a[4] > b[4]:
+        venc.append(b[0])
+    elif a[4] < b[4]:
+        venc.append(a[0])
+    else:
+        venc.append(0)
+
+    #primeira bend
+    if a[5] > b[5]:
+        venc.append(b[0])
+    elif a[5] < b[5]:
+        venc.append(a[0])
+    else:
+        venc.append(0)
+
+    #finalização
+    if a[6] > b[6]:
+        venc.append(b[0])
+    elif a[6] < b[6]:
+        venc.append(a[0])
+    else:
+        venc.append(0)
+
+    #tempo
+    if a[7] > b[7]:
+        venc.append(b[0])
+    elif a[7] < b[7]:
+        venc.append(a[0])
+    else:
+        venc.append(0)
+
+    #variação media de tempo
+    if a[8] > b[8]:
+        venc.append(b[0])
+    elif a[8] < b[8]:
+        venc.append(a[0])
+    else:
+        venc.append(0)
+
+     #velocidade media
+    if a[9] > b[9]:
+        venc.append(a[0])
+    elif a[9] < b[9]:
+        venc.append(b[0])
+    else:
+        venc.append(0)
+
+     #recupera / cansa
+    if a[10] > b[10]:
+        venc.append(a[0])
+    elif a[10] < b[10]:
+        venc.append(b[0])
+    else:
+        venc.append(0)
+
+       #split final
+    if a[11] > b[11]:
+        venc.append(a[0])
+    elif a[11] < b[11]:
+        venc.append(b[0])
+    else:
+        venc.append(0)
+
+    # print(venc)
+    return(venc)
+
+
+
+
+
 
