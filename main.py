@@ -4,6 +4,7 @@ import funções_ as fun
 
 pistas = f_busca.buscar_todas_pistas()
 
+
 opcoes = []
 for pista in pistas:
     opcoes.append(pista[0])
@@ -37,7 +38,10 @@ layout4 = [[sg.Text('TRAP', size= 11, justification= 'center' ), sg.Text('NOME',
            [sg.Text('   ', size= 11, justification= 'center'), sg.Text('DIFERENÇA', size= 11, justification= 'center'), sg.Text(key='dscorrer_d', size= 11, justification= 'center'), sg.Text(key='peso_d', size= 11, justification= 'center'), sg.Text(key='split_d', size= 11, justification= 'center'), sg.Text(key='bend1_d', size= 11, justification= 'center'), sg.Text(key='pos_d', size= 11, justification= 'center'), sg.Text(key='tempo_d', size= 11, justification= 'center'), sg.Text(key='vtemp_d', size= 11, justification= 'center'), sg.Text(key='vmed_d', size= 11, justification= 'center'), sg.Text(key='rec_d', size= 11, justification= 'center'), sg.Text(key='spfin_d', size= 11, justification= 'center') ],
            [sg.Text('   ', size= 11, justification= 'center'), sg.Text('VENCEDOR', size= 11, justification= 'center'), sg.Text(key='dscorrer_v', size= 11, justification= 'center'), sg.Text(key='peso_v', size= 11, justification= 'center'), sg.Text(key='split_v', size= 11, justification= 'center'), sg.Text(key='bend1_v', size= 11, justification= 'center'), sg.Text(key='pos_v', size= 11, justification= 'center'), sg.Text(key='tempo_v', size= 11, justification= 'center'), sg.Text(key='vtemp_v', size= 11, justification= 'center'), sg.Text(key='vmed_v', size= 11, justification= 'center'), sg.Text(key='rec_v', size= 11, justification= 'center'), sg.Text(key='spfin_v', size= 11, justification= 'center') ],
            [sg.Text('   ', size= 11, justification= 'center')],
+           [sg.Table(key= 'hist_a', headings=['DATA', 'PISTA', 'DIST', 'TRAP', 'SPLIT', 'BENDS', 'PESO', 'CAT', 'TEMPO', 'VEL MEDIA', 'POS', 'REMARKS'], max_col_width=18, auto_size_columns=True, justification='center', values= []),
+           sg.Table(key= 'hist_b', headings=['DATA', 'PISTA', 'DIST', 'TRAP', 'SPLIT', 'BENDS', 'PESO', 'CAT', 'TEMPO', 'VEL MEDIA', 'POS', 'REMARKS'], max_col_width=18, auto_size_columns=True, justification='center', values= [])],
            [sg.Text('TOTAL: A x B', size= 11, justification= 'center'), sg.Text(key='tot_a', size= 11, justification= 'center'), sg.Text(key='tot_b', size= 11, justification= 'center'), sg.Text('VENCEDOR:', size= 11, justification= 'center'), sg.Text(key='vencedor', size= 11, justification= 'center')],
+
            [sg.Button('Voltar')]]
 
 janela_comp = None
@@ -287,6 +291,22 @@ while True:
                     janela_comp['vencedor'].update(value='empate')
 
 
+                a = f_busca.buscar_dog_id(dog_A)
+                hist_a = f_busca.buscar_corridas_por_dog(a[0])
+                for i in range(0, len(hist_a)):
+                    hist_a[i] = hist_a[i][1:]
+
+                b = f_busca.buscar_dog_id(dog_B)
+                hist_b = f_busca.buscar_corridas_por_dog(b[0])
+                for i in range(0, len(hist_b)):
+                    hist_b[i] = hist_b[i][1:]
+                # t_races_a = len(hist_a)
+                # t_races_b = len(hist_b)
+
+                janela_comp['hist_a'].update(values=hist_a)
+                janela_comp['hist_b'].update(values=hist_b)
+
+
             while janela_comp is not None:
                 evento4, valores4 = janela_comp.read()
                 if evento4 == sg.WINDOW_CLOSED or evento4 == 'Voltar':
@@ -308,42 +328,3 @@ if janela_secundaria is not None:
             janela_comp.close()
 
 
-# # Criando a janela principal
-# layout = [[sg.Text('Escolha uma opção:')],
-#           [sg.Combo(opcoes, default_value=opcoes[0])],
-#           [sg.Button('Ok'), sg.Button('Mostrar outra janela')]]
-
-# janela_principal = sg.Window('Janela principal', layout)
-
-# # Criando a segunda janela
-# layout = [[sg.Text('Escolha a corrida:')],
-#             [sg.Combo(opcoes_r, default_value=opcoes_r[0])],
-#             [sg.Button('Ok')]]
-
-# janela_secundaria = None
-
-# # Loop para ler eventos da janela principal
-# while True:
-#     evento, valores = janela_principal.read()
-#     if evento == sg.WINDOW_CLOSED:
-#         break
-#     elif evento == 'Ok':
-#         opcao_escolhida = valores[0]
-#         sg.popup(f'Você escolheu a opção {opcao_escolhida}.')
-#     elif evento == 'Mostrar outra janela':
-#         if janela_secundaria is None:
-#             janela_secundaria = sg.Window('Janela secundária', layout)
-#         else:
-#             janela_secundaria.un_hide()
-
-#     # Loop para ler eventos da janela secundária
-#     while janela_secundaria is not None:
-#         evento2, valores2 = janela_secundaria.read()
-#         if evento2 == sg.WINDOW_CLOSED or evento2 == 'Fechar':
-#             janela_secundaria.hide()
-#             break
-
-# # Fechando as janelas
-# janela_principal.close()
-# if janela_secundaria is not None:
-#     janela_secundaria.close()

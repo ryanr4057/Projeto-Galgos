@@ -52,6 +52,10 @@ def buscar_dog_nome(nome):
     c.execute("SELECT * FROM dogs WHERE nome = ?", (nome,))
     return c.fetchone()
 
+def buscar_dog_id(nome):
+    c.execute("SELECT id FROM dogs WHERE nome = ?", (nome,))
+    return c.fetchone()
+
 def buscar_todos_dogs():
     c.execute("SELECT * FROM dogs")
     return c.fetchall()
@@ -74,6 +78,10 @@ def buscar_corrida(id):
 
 def buscar_corridas_por_dog_dist(dog_id, dist):
     c.execute("SELECT * FROM corrida WHERE dog_id = ?  AND distancia = ?", (dog_id, dist))
+    return c.fetchall()
+
+def buscar_corridas_por_dog(dog_id):
+    c.execute("SELECT * FROM corrida WHERE dog_id = ?", (dog_id,))
     return c.fetchall()
 
 def buscar_id_pelo_nome(nome):

@@ -406,6 +406,8 @@ def compara(race_dist, dog_A, dog_B):
         bends = hist_a[i][6]
         rec_c = 0
         bend1 = 0
+        split_fin = 0
+
 
         if len(bends) > 0:
             bend1 = int(bends[0])
@@ -420,7 +422,7 @@ def compara(race_dist, dog_A, dog_B):
     for i in range(0, len(hist_b)):
         splits_b.append(hist_b[i][5])
         tempos_b.append(hist_b[i][9])
-        if len(hist_b[i][11]) > 0:
+        if len(hist_b[i][11]) > 2:
             po = int(hist_b[i][11][0])
         else:
             po = 0
