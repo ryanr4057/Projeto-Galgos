@@ -396,7 +396,7 @@ def compara(race_dist, dog_A, dog_B):
     for i in range(0, len(hist_a)):
         splits_a.append(hist_a[i][5])
         tempos_a.append(hist_a[i][9])
-        if len(hist_a[i][11]) > 0:
+        if len(hist_a[i][11]) > 2:
             po = int(hist_a[i][11][0])
         else:
             po = 0
@@ -539,82 +539,121 @@ def compara_dif(d_dog_a, d_dog_b):
     #dias sem correr
     if a[2] > b[2]:
         venc.append(b[0])
+        tot_b = tot_b + 1
     elif a[2] < b[2]:
         venc.append(a[0])
+        tot_a = tot_a + 1
+
     else:
         venc.append(0)
 
     #peso
     if a[3] > b[3]:
         venc.append(a[0])
+        tot_a = tot_a + 1
+
     elif a[3] < b[3]:
         venc.append(b[0])
+        tot_b = tot_b + 1
+
     else:
         venc.append(0)
 
     #split
     if a[4] > b[4]:
         venc.append(b[0])
+        tot_b = tot_b + 1
+
     elif a[4] < b[4]:
         venc.append(a[0])
+        tot_a = tot_a + 1
+
     else:
         venc.append(0)
 
     #primeira bend
     if a[5] > b[5]:
         venc.append(b[0])
+        tot_b = tot_b + 1
+
     elif a[5] < b[5]:
         venc.append(a[0])
+        tot_a = tot_a + 1
+
     else:
         venc.append(0)
 
     #finalização
     if a[6] > b[6]:
         venc.append(b[0])
+        tot_b = tot_b + 1
+
     elif a[6] < b[6]:
         venc.append(a[0])
+        tot_a = tot_a + 1
+
     else:
         venc.append(0)
 
     #tempo
     if a[7] > b[7]:
         venc.append(b[0])
+        tot_b = tot_b + 1
+
     elif a[7] < b[7]:
         venc.append(a[0])
+        tot_a = tot_a + 1
+
     else:
         venc.append(0)
 
     #variação media de tempo
     if a[8] > b[8]:
         venc.append(b[0])
+        tot_b = tot_b + 1
+
     elif a[8] < b[8]:
         venc.append(a[0])
+        tot_a = tot_a + 1
+
     else:
         venc.append(0)
 
      #velocidade media
     if a[9] > b[9]:
         venc.append(a[0])
+        tot_a = tot_a + 1
+
     elif a[9] < b[9]:
         venc.append(b[0])
+        tot_b = tot_b + 1
+
     else:
         venc.append(0)
 
      #recupera / cansa
     if a[10] > b[10]:
         venc.append(a[0])
+        tot_a = tot_a + 1
+
     elif a[10] < b[10]:
         venc.append(b[0])
+        tot_b = tot_b + 1
+
     else:
         venc.append(0)
 
        #split final
     if a[11] > b[11]:
         venc.append(a[0])
+        tot_a = tot_a + 1
     elif a[11] < b[11]:
         venc.append(b[0])
     else:
         venc.append(0)
+
+    venc.append(tot_a)
+    venc.append(tot_b)
 
     # print(venc)
     return(venc)

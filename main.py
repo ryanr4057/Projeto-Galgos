@@ -36,6 +36,8 @@ layout4 = [[sg.Text('TRAP', size= 11, justification= 'center' ), sg.Text('NOME',
            [sg.Text(key='trap_b', size= 11, justification= 'center'), sg.Text(key='nome_b', size= 11, justification= 'center'), sg.Text(key='dscorrer_b', size= 11, justification= 'center'), sg.Text(key='peso_b', size= 11, justification= 'center'), sg.Text(key='split_b', size= 11, justification= 'center'), sg.Text(key='bend1_b', size= 11, justification= 'center'), sg.Text(key='pos_b', size= 11, justification= 'center'), sg.Text(key='tempo_b', size= 11, justification= 'center'), sg.Text(key='vtemp_b', size= 11, justification= 'center'), sg.Text(key='vmed_b', size= 11, justification= 'center'), sg.Text(key='rec_b', size= 11, justification= 'center'), sg.Text(key='spfin_b', size= 11, justification= 'center') ],
            [sg.Text('   ', size= 11, justification= 'center'), sg.Text('DIFERENÇA', size= 11, justification= 'center'), sg.Text(key='dscorrer_d', size= 11, justification= 'center'), sg.Text(key='peso_d', size= 11, justification= 'center'), sg.Text(key='split_d', size= 11, justification= 'center'), sg.Text(key='bend1_d', size= 11, justification= 'center'), sg.Text(key='pos_d', size= 11, justification= 'center'), sg.Text(key='tempo_d', size= 11, justification= 'center'), sg.Text(key='vtemp_d', size= 11, justification= 'center'), sg.Text(key='vmed_d', size= 11, justification= 'center'), sg.Text(key='rec_d', size= 11, justification= 'center'), sg.Text(key='spfin_d', size= 11, justification= 'center') ],
            [sg.Text('   ', size= 11, justification= 'center'), sg.Text('VENCEDOR', size= 11, justification= 'center'), sg.Text(key='dscorrer_v', size= 11, justification= 'center'), sg.Text(key='peso_v', size= 11, justification= 'center'), sg.Text(key='split_v', size= 11, justification= 'center'), sg.Text(key='bend1_v', size= 11, justification= 'center'), sg.Text(key='pos_v', size= 11, justification= 'center'), sg.Text(key='tempo_v', size= 11, justification= 'center'), sg.Text(key='vtemp_v', size= 11, justification= 'center'), sg.Text(key='vmed_v', size= 11, justification= 'center'), sg.Text(key='rec_v', size= 11, justification= 'center'), sg.Text(key='spfin_v', size= 11, justification= 'center') ],
+           [sg.Text('   ', size= 11, justification= 'center')],
+           [sg.Text('TOTAL: A x B', size= 11, justification= 'center'), sg.Text(key='tot_a', size= 11, justification= 'center'), sg.Text(key='tot_b', size= 11, justification= 'center'), sg.Text('VENCEDOR:', size= 11, justification= 'center'), sg.Text(key='vencedor', size= 11, justification= 'center')],
            [sg.Button('Voltar')]]
 
 janela_comp = None
@@ -72,6 +74,7 @@ while True:
             janela_principal.un_hide()  # Mostrando a janela principal novamente
             janela_secundaria.hide()
             break
+
         elif evento2 == 'Selecionar Race':
             opcao_escolhida = valores2['-COMBO-']
             if janela_ter is None:
@@ -98,13 +101,15 @@ while True:
                 janela_secundaria.un_hide()  # Mostrando a janela principal novamente
                 janela_ter.hide()
                 break
+
             elif evento3 == 'Comparar':
                 if janela_comp is None:
                     janela_comp = sg.Window('RACES', layout4)
                     janela_comp.Finalize()
                 else:
-                    janela_secundaria.un_hide()
-                    janela_principal.hide()
+                    janela_comp.un_hide()
+                janela_ter.hide()
+
                 dist = f_busca.buscar_race_dist(id_race)
                 dog_A = valores3['-COMBO-']
                 dog_B = valores3['-COMBO2-']
@@ -271,6 +276,16 @@ while True:
                 janela_comp['vmed_v'].update(value=venc[7])
                 janela_comp['rec_v'].update(value=venc[8])
                 janela_comp['spfin_v'].update(value=venc[9])
+                janela_comp['tot_a'].update(value=venc[10])
+                janela_comp['tot_b'].update(value=venc[11])
+
+                if venc[10] > venc[11]:
+                    janela_comp['vencedor'].update(value=d_dogs_a[0])
+                elif venc[10] < venc[11]:
+                    janela_comp['vencedor'].update(value=d_dogs_b[0])
+                else:
+                    janela_comp['vencedor'].update(value='empate')
+
 
             while janela_comp is not None:
                 evento4, valores4 = janela_comp.read()
@@ -278,6 +293,7 @@ while True:
                     janela_ter.un_hide()  # Mostrando a janela principal novamente
                     janela_comp.hide()
                     break
+
 
 
 
