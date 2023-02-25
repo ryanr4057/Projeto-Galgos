@@ -43,8 +43,8 @@ def buscar_race_id(pista_id,nome):
     c.execute("SELECT id FROM races WHERE pista_id = ? AND nome = ?", (pista_id, nome))
     return c.fetchone()
 
-def buscar_race_id_h(horario):
-    c.execute("SELECT id FROM races WHERE horario = ?", (horario))
+def buscar_race_id_h(pista_id, horario):
+    c.execute("SELECT id FROM races WHERE pista_id = ? AND horario = ?", (pista_id, horario))
     return c.fetchone()
 
 def buscar_race_hor():
@@ -57,6 +57,10 @@ def buscar_todas_races():
 
 def buscar_races_por_pista(pista_id):
     c.execute("SELECT nome FROM races WHERE pista_id = ?", (pista_id))
+    return c.fetchall()
+
+def buscar_races_por_pista_i(pista_id):
+    c.execute("SELECT id FROM races WHERE pista_id = ?", (pista_id))
     return c.fetchall()
 
 def buscar_races_h_por_pista(pista_id):

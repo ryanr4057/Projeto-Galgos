@@ -400,7 +400,11 @@ def compara(id_race, dog_A, dog_B):
         splits_a.append(hist_a[i][5])
         tempos_a.append(hist_a[i][9])
         if len(hist_a[i][11]) > 2:
-            po = int(hist_a[i][11][0])
+            if hist_a[i][11][0] == '=':
+                n_po = (hist_a[i][11]).replace("=", "").strip()
+                po = int(n_po[0])
+            else:
+                po = int(hist_a[i][11][0])
         else:
             po = 0
         pos_a.append(po)
@@ -427,7 +431,11 @@ def compara(id_race, dog_A, dog_B):
         if (hist_b[i][9]) != None:
             tempos_b.append(hist_b[i][9])
         if len(hist_b[i][11]) > 2:
-            po = int(hist_b[i][11][0])
+            if hist_b[i][11][0] == '=':
+                n_po = (hist_a[i][11]).replace("=", "").strip()
+                po = int(n_po[0])
+            else:
+                po = int(hist_b[i][11][0])
         else:
             po = 0
         pos_b.append(po)
@@ -991,14 +999,13 @@ def compara_dif_pond(d_dog_a, d_dog_b):
         venc.append(0)
 
     if a[12] == 2:
-        tot_a = tot_a + 0.5
-    elif a[12] == 0:
-        tot_a = tot_a - 0.5
+        tot_a = tot_a + 0.7
+
 
     if b[12] == 2:
         tot_b = tot_b + 0.7
-    elif b[12] == 0:
-        tot_b = tot_b - 0.7
+
+
 
 
     venc.append(tot_a)
@@ -1017,18 +1024,32 @@ def ordena_races():
 
     return(orded_races)
 
-def proxima_hora(hora_atual_str, horas):
-    hora_atual = datetime.datetime.strptime(hora_atual_str, '%H:%M')
-    print(hora_atual)
-    horas_datetime = [datetime.datetime.strptime(h, '%H:%M') for h in horas]
-    print(horas_datetime)
-    horas_futuras = [h for h in horas_datetime if h > hora_atual]
-    print(horas_futuras)
+def proxima_hora( horas):
+    hora_atual = datetime.datetime.now().time() # Obtém a hora atual do sistema
+    hora_atual_datetime = datetime.datetime.combine(datetime.datetime.today(), hora_atual) # Converte a hora atual em um objeto datetime
+    hora_atual_datetime += datetime.timedelta(hours=3) # Adiciona 3 horas ao horário atual
+    hora_atual_3 = datetime.datetime.combine(datetime.datetime.today().date(), hora_atual_datetime.time())
+    hora_12 = datetime.time(12, 0)
+    d_hora_12 = datetime.datetime.combine(datetime.datetime.today().date(), hora_12)
+
+    if hora_atual_3 < d_hora_12:
+        data_hora = datetime.datetime.combine(datetime.datetime.today(), hora_12) # Usa a data atual com a hora 12:00
+    else:
+        data_hora = datetime.datetime.combine(datetime.datetime.today().date(), hora_12)
+
+    if hora_atual_3 > data_hora:
+        hora_atual_3 = hora_atual_3 - datetime.timedelta(hours=12)
+
+
+    horas_datetime = [datetime.datetime.combine(datetime.datetime.today().date(), datetime.datetime.strptime(h, '%H:%M').time()) for h in horas]
+
+    horas_futuras = [h for h in horas_datetime if h > hora_atual_3]
 
     if len(horas_futuras) == 0:
         return None
 
     proxima_hora = min(horas_futuras)
+
     return proxima_hora.strftime('%H:%M')
 
 def atribui_dados(id_race, d_a, d_b, valores, janela_comp ):
@@ -1247,12 +1268,12 @@ def atribui_dados(id_race, d_a, d_b, valores, janela_comp ):
     janela_comp['vmed_v'].update(value=venc[7], background_color= cores[7])
     janela_comp['rec_v'].update(value=venc[8], background_color= cores[8])
     janela_comp['spfin_v'].update(value=venc[9], background_color= cores[9])
-    janela_comp['tot_a'].update(value=venc[10], background_color= cor_a[0])
-    janela_comp['tot_b'].update(value=venc[11], background_color= cor_b[0])
+    janela_comp['tot_a'].update(value=venc[11], background_color= cor_a[0])
+    janela_comp['tot_b'].update(value=venc[12], background_color= cor_b[0])
 
-    if venc[10] > venc[11]:
+    if venc[11] > venc[12]:
         janela_comp['vencedor'].update(value=d_dogs_a[0], background_color= cor_a[0])
-    elif venc[10] < venc[11]:
+    elif venc[11] < venc[12]:
         janela_comp['vencedor'].update(value=d_dogs_b[0], background_color= cor_b[0])
     else:
         janela_comp['vencedor'].update(value='empate')
@@ -1330,13 +1351,22 @@ def status_cat(cat_atual, cat_race):
         elif int(cat_atual[1:]) > int(cat_race[0][1:]):
             status = 0
 
-    elif cat_race[0][0] == "s" == cat_atual[0] :
+    elif cat_race[0][0] == "S" == cat_atual[0] :
         if int(cat_atual[1:]) < int(cat_race[0][1:]):
             status = 2
         elif int(cat_atual[1:]) == int(cat_race[0][1:]):
             status = 1
         elif int(cat_atual[1:]) > int(cat_race[0][1:]):
             status = 0
+
+    elif cat_race[0][0] == "B" == cat_atual[0] :
+        if int(cat_atual[1:]) < int(cat_race[0][1:]):
+            status = 2
+        elif int(cat_atual[1:]) == int(cat_race[0][1:]):
+            status = 1
+        elif int(cat_atual[1:]) > int(cat_race[0][1:]):
+            status = 0
+
 
     elif cat_race[0][0] == "A" and cat_atual[0] == "O" :
         status = 2
@@ -1358,6 +1388,29 @@ def status_cat(cat_atual, cat_race):
 
     return(status)
 
+def index_prox_race(id_pista):
+    i_races = f_busca.buscar_races_por_pista_i(id_pista)
+    races_h = f_busca.buscar_races_h_por_pista(id_pista)
+
+    races_h_str = []
+    for i in range(0, len(races_h)):
+        races_h_str.append(races_h[i][0])
+
+    p_race = proxima_hora(races_h_str)
+
+    if(p_race) is None:
+        p_race = races_h[0][0]
+
+    if p_race[0] == '0':
+        p_race = p_race[1:]
+
+    id_p_race = f_busca.buscar_race_id_h(id_pista[0], p_race)
+
+    for i in range(0, len(i_races)):
+        if id_p_race == i_races[i]:
+            index = i
+
+    return index
 
 
 

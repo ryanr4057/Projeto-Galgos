@@ -6,7 +6,7 @@ def mens_telegram(message_text):
 
     bot = telegram.Bot(api_token)
 
-    chat_id = '-1001748518612'
+    chat_id = '-1001725044307'
     # message_text = 'Olá, este é um teste de mensagem enviada pelo bot do Telegram!'
 
 

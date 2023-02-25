@@ -3,7 +3,7 @@ import f_busca
 import funções_ as fun
 import datetime
 import bot
-
+import keyboard
 pistas = f_busca.buscar_todas_pistas()
 
 
@@ -13,34 +13,55 @@ for pista in pistas:
 
 
 # Criando a janela principal
-layout = [[sg.Text('Escolha a Pista:', background_color='black')],
-          [sg.Combo(opcoes, default_value=opcoes[0], size=20)],
+layout = [[sg.Text('      ', background_color='black')],
+          [sg.Text('Escolha a Pista:', background_color='black', font=('gotham', 20))],
+          [sg.Text('      ', background_color='black')],
+          [sg.Combo(opcoes, default_value=opcoes[0], size=15, font=('gotham', 15))],
           [sg.Text('      ', background_color='black')],
           [sg.Text('      ', background_color='black')],
           [sg.Text('      ', background_color='black')],
           [sg.Text('      ', background_color='black')],
-          [sg.Button('Selecionar Pista')]]
+          [sg.Text('      ', background_color='black')],
+          [sg.Text('      ', background_color='black')],
+          [sg.Text('      ', background_color='black')],
+          [sg.Text('      ', background_color='black')],
+          [sg.Text('      ', background_color='black')],
+          [sg.Button('Selecionar Pista', size=15, font=('gotham', 12) )]]
 
-janela_principal = sg.Window('PISTAS', layout, size=(400, 200), background_color='black')
+janela_principal = sg.Window('PISTAS', layout, size= (1400, 430), background_color='black')
 
 # Criando a segunda janela
-layout2 = [[sg.Text('Escolha a Race:', background_color='black')],
-           [sg.Combo([], key='-COMBO-', size=20)],
+layout2 = [[sg.Text('      ', background_color='black')],
+           [sg.Text('Escolha a Race:', background_color='black',  font=('gotham', 20))],
+           [sg.Text('      ', background_color='black' )],
+           [sg.Combo([], key='-COMBO-', size=15, font=('gotham', 15) )],
            [sg.Text('      ', background_color='black')],
            [sg.Text('      ', background_color='black')],
            [sg.Text('      ', background_color='black')],
            [sg.Text('      ', background_color='black')],
-           [sg.Button('Voltar'), sg.Button('Selecionar Race') ]]
+           [sg.Text('      ', background_color='black')],
+           [sg.Text('      ', background_color='black')],
+           [sg.Text('      ', background_color='black')],
+           [sg.Text('      ', background_color='black')],
+           [sg.Text('      ', background_color='black')],
+           [sg.Button('Voltar', size=6, font=('gotham', 12) ), sg.Button('Selecionar Race', size=15, font=('gotham', 12) ) ]]
 
 janela_secundaria = None
 
-layout3 = [[sg.Text('Escolha o primeiro cachorro:', background_color='black')],
-           [sg.Combo([], key='-COMBO-', size=20)],
-           [sg.Text('Escolha o segundo cachorro:', background_color='black')],
-           [sg.Combo([], key='-COMBO2-', size=20)],
+layout3 = [[sg.Text('      ', background_color='black')],
+           [sg.Text('Escolha o primeiro cachorro:', background_color='black',  font=('gotham', 20))],
+           [sg.Text('      ', background_color='black')],
+           [sg.Combo([], key='-COMBO-', size=18, font=('gotham', 14))],
+           [sg.Text('      ', background_color='black')],
+           [sg.Text('Escolha o segundo cachorro:', background_color='black',  font=('gotham', 20))],
+           [sg.Text('      ', background_color='black')],
+           [sg.Combo([], key='-COMBO2-', size=18, font=('gotham', 14))],
            [sg.Text('      ', background_color='black')],
            [sg.Text('      ', background_color='black')],
-           [sg.Button('Voltar'), sg.Button('Comparar')]]
+           [sg.Text('      ', background_color='black')],
+           [sg.Text('      ', background_color='black')],
+           [sg.Text('      ', background_color='black')],
+           [sg.Button('Voltar', size=6, font=('gotham', 12)), sg.Button('Comparar', size=12, font=('gotham', 12) )]]
 
 janela_ter = None
 
@@ -55,7 +76,7 @@ layout4 = [[sg.Text(key='nome_pista', size= 11, background_color= 'black', justi
            sg.Table(key= 'hist_b', headings=['DATA', 'PISTA', 'DIST', 'TRAP', 'SPLIT', 'BENDS', 'PESO', 'CAT', 'TEMPO', 'VEL MEDIA', 'POS', 'REMARKS'], max_col_width=18, auto_size_columns=True, justification='center', values= [],  background_color= 'black')],
            [sg.Text('TOTAL: A x B',background_color= 'black', size= 11, justification= 'center'), sg.Text(key='tot_a',background_color= 'black', size= 11, justification= 'center'), sg.Text(key='tot_b',background_color= 'black', size= 11, justification= 'center'), sg.Text('VENCEDOR:',background_color= 'black', size= 11, justification= 'center'), sg.Text(key='vencedor',background_color= 'black', size= 11, justification= 'center')],
 
-           [sg.Button('Voltar'), sg.Button('enviar no telegram')]]
+           [sg.Button('Voltar', size=6, font=('gotham', 12)), sg.Button('enviar no telegram', size=18, font=('gotham', 12))]]
 
 janela_comp = None
 
@@ -67,7 +88,7 @@ while True:
     elif evento == 'Selecionar Pista':
         opcao_escolhida = valores[0]
         if janela_secundaria is None:
-            janela_secundaria = sg.Window('RACES', layout2, size=(400, 200), background_color='black')
+            janela_secundaria = sg.Window('RACES', layout2, size=(1400, 430), background_color='black')
             janela_secundaria.Finalize()
         else:
             janela_secundaria.un_hide()
@@ -75,9 +96,10 @@ while True:
 
         # Preenchendo as opções do campo select com o array passado pela janela principal
         id_pista = f_busca.buscar_pista_id(opcao_escolhida)
-
         races = f_busca.buscar_races_por_pista(id_pista)
         races_h = f_busca.buscar_races_h_por_pista(id_pista)
+
+        index = fun.index_prox_race(id_pista)
 
         opcoes = []
         for i in range(0, len(races)):
@@ -85,7 +107,7 @@ while True:
             opcoes.append(f"{races_h[i][0]} - ({races[i][0]})")
 
 
-        janela_secundaria['-COMBO-'].update(values=opcoes, set_to_index=0)
+        janela_secundaria['-COMBO-'].update(values=opcoes, set_to_index= index)
 
 
     # Loop para ler eventos da janela secundária
@@ -99,7 +121,7 @@ while True:
         elif evento2 == 'Selecionar Race':
             opcao_escolhida1 = valores2['-COMBO-']
             if janela_ter is None:
-                janela_ter = sg.Window('RACES', layout3, size=(400, 200), background_color='black')
+                janela_ter = sg.Window('DOGS', layout3, size= (1400, 430), background_color='black')
                 janela_ter.Finalize()
             else:
                 janela_ter.un_hide()
@@ -128,7 +150,7 @@ while True:
 
             elif evento3 == 'Comparar':
                 if janela_comp is None:
-                    janela_comp = sg.Window('A v B', layout4, background_color='black')
+                    janela_comp = sg.Window('A v B', layout4, size= (1400, 430),  background_color='black')
                     janela_comp.Finalize()
                 else:
                     janela_comp.un_hide()
@@ -156,14 +178,13 @@ while True:
                     janela_comp.hide()
                     break
                 elif evento4 == 'enviar no telegram':
-                    if venc[10] > venc[11]:
-                        mensagem = f"{valores[0]}-{opcao_escolhida1} \n {d_dogs_a[0]}-{d_dogs_a[1]} VENCE {d_dogs_b[0]}-{d_dogs_b[1]}"
-                    elif venc[10] < venc[11]:
-                        mensagem = f"{valores[0]}-{opcao_escolhida1} \n {d_dogs_b[0]}-{d_dogs_b[1]} VENCE {d_dogs_a[0]}-{d_dogs_a[1]}"
+                    if venc[11] > venc[12]:
+                        mensagem = f"{valores[0]} {opcao_escolhida1}\n {d_dogs_a[0]}{d_dogs_a[1]} ({venc[11]})  VENCE  {d_dogs_b[0]}{d_dogs_b[1]} ({venc[12]})"
+                    elif venc[11] < venc[12]:
+                        mensagem = f"{valores[0]} {opcao_escolhida1} \n {d_dogs_b[0]}{d_dogs_b[1]} ({venc[12]})  VENCE  {d_dogs_a[0]}{d_dogs_a[1]} ({venc[11]})"
+                    elif venc[11] == venc[12]:
+                        mensagem = f"{valores[0]} {opcao_escolhida1} \n {d_dogs_b[0]}{d_dogs_b[1]} ({venc[12]})  VENCE  {d_dogs_a[0]}{d_dogs_a[1]} ({venc[11]})"
                 bot.mens_telegram(mensagem)
-
-
-
 
 
 # Fechando as janelas
