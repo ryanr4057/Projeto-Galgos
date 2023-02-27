@@ -141,14 +141,16 @@ def coleta_dogs_race_aux(pista_races_links, pista_id):
         if reser == 0:
             pick = p.get_text().strip()
 
-        n = soup.find('span', {'class': 'titleColumn1'})
-        if n is None:
-            print("nome erro")
-            tag = 'span'
-            t1 = 'class'
-            t2 = 'titleColumn1'
-            n = v_campo(soup,driver,tag,t1,t2)
-        nome = n.get_text().strip()
+        # n = soup.find('span', {'class': 'titleColumn1'})
+        # if n is None:
+        #     print("nome erro")
+        #     tag = 'span'
+        #     t1 = 'class'
+        #     t2 = 'titleColumn1'
+        #     n = v_campo(soup,driver,tag,t1,t2)
+        # nome = n.get_text().strip()
+
+        nome = f"Race {i + 1}"
 
         t = soup.find('span', {'class': 'titleColumn2'})
         if t is None:
@@ -210,7 +212,10 @@ def coleta_dogs_races(pistas_races):
 
 def coleta_hist_dog_aux(dog, race_id):
     dog_dados = []
-    d_nome = dog.find('strong', {}).get_text()
+    d_nome = dog.find('strong', {}).get_text().strip()
+    d_nome = re.sub(r'\(.*?\)', '', d_nome)
+    d_nome = d_nome.strip()
+
     t = dog.find('i', {})
     tr = (t)['class']
     trap = int((tr[1])[4])
@@ -406,21 +411,21 @@ def compara(id_race, dog_A, dog_B):
             else:
                 po = int(hist_a[i][11][0])
         else:
-            po = 0
+            po = 6
         pos_a.append(po)
         vel_media_a.append(hist_a[i][10])
 
         bends = hist_a[i][6]
         rec_c = 0
-        bend1 = 0
+        bend1 = 6
         split_fin = 0
 
 
         if len(bends) > 0:
             bend1 = int(bends[0])
             ultbend = int(bends[len(bends) - 1])
-            rec_c = bend1 - ultbend
-            split_fin = int(bends[len(bends) - 2]) - int(bends[len(bends) - 1])
+            rec_c = bend1 - po
+            split_fin =( int(bends[len(bends) - 2]) - po )
 
         pos_1bend_a.append(bend1)
         rec_cansa_a.append(rec_c)
@@ -437,19 +442,19 @@ def compara(id_race, dog_A, dog_B):
             else:
                 po = int(hist_b[i][11][0])
         else:
-            po = 0
+            po = 6
         pos_b.append(po)
         vel_media_b.append(hist_b[i][10])
 
         bends = hist_b[i][6]
         rec_c = 0
-        bend1 = 0
+        bend1 = 6
 
         if len(bends) > 0:
             bend1 = int(bends[0])
             ultbend = int(bends[len(bends) - 1])
-            rec_c = bend1 - ultbend
-            split_fin = int(bends[len(bends) - 2]) - int(bends[len(bends) - 1])
+            rec_c = bend1 - po
+            split_fin = (int(bends[len(bends) - 2]) - po)
 
         pos_1bend_b.append(bend1)
         rec_cansa_b.append(rec_c)
@@ -465,27 +470,27 @@ def compara(id_race, dog_A, dog_B):
     if len(splits_a) >= 1:
         m_split_a = calcula_media(splits_a)
     else:
-        m_split_a = 0
+        m_split_a = 20
 
     if len(tempos_a) >= 1:
         m_tempos_a = calcula_media(tempos_a)
     else:
-        m_tempos_a = 0
+        m_tempos_a = 50
 
     if len(tempos_a) >= 1:
         var_med_tempo_a = calcula_variacao_media(tempos_a)
     else:
-        var_med_tempo_a = 0
+        var_med_tempo_a = 5
 
     if len(pos_a) >= 1:
         m_pos_a = calcula_media(pos_a)
     else:
-        m_pos_a = 0
+        m_pos_a = 6
 
     if len(pos_1bend_a) >= 1:
         m_1bend_a = calcula_media(pos_1bend_a)
     else:
-        m_1bend_a = 0
+        m_1bend_a = 6
 
     if len(vel_media_a) >= 1:
         m_vel_med_a = calcula_media(vel_media_a)
@@ -540,27 +545,27 @@ def compara(id_race, dog_A, dog_B):
     if len(splits_b) >= 1:
         m_split_b = calcula_media(splits_b)
     else:
-        m_split_b = 0
+        m_split_b = 10
 
     if len(tempos_b) >= 1:
         m_tempos_b = calcula_media(tempos_b)
     else:
-        m_tempos_b = 0
+        m_tempos_b = 50
 
     if len(tempos_b) >= 1:
         var_med_tempo_b = calcula_variacao_media(tempos_b)
     else:
-        var_med_tempo_b = 0
+        var_med_tempo_b = 5
 
     if len(pos_b) >= 1:
         m_pos_b = calcula_media(pos_b)
     else:
-        m_pos_b = 0
+        m_pos_b = 6
 
     if len(pos_1bend_b) >= 1:
         m_1bend_b = calcula_media(pos_1bend_b)
     else:
-        m_1bend_b = 0
+        m_1bend_b = 6
 
     if len(vel_media_b) >= 1:
         m_vel_med_b = calcula_media(vel_media_b)
@@ -980,6 +985,7 @@ def compara_dif_pond(d_dog_a, d_dog_b):
             tot_a = tot_a + 1
         elif (a[11] - b[11]) > 0.5 :
             tot_a = tot_a + 0.5
+
     elif a[11] < b[11]:
         venc.append(b[0])
         if (b[11] - a[11]) > 1 :
@@ -1000,16 +1006,19 @@ def compara_dif_pond(d_dog_a, d_dog_b):
 
     if a[12] == 2:
         tot_a = tot_a + 0.7
+    elif a[12] == 0:
+        tot_a = tot_a - 0.7
 
 
     if b[12] == 2:
         tot_b = tot_b + 0.7
+    elif b[12] == 0:
+        tot_b = tot_b - 0.7
 
 
 
-
-    venc.append(tot_a)
-    venc.append(tot_b)
+    venc.append( round(tot_a, 2))
+    venc.append(round(tot_b, 2))
 
     # print(venc)
     return(venc)
@@ -1029,7 +1038,7 @@ def proxima_hora( horas):
     hora_atual_datetime = datetime.datetime.combine(datetime.datetime.today(), hora_atual) # Converte a hora atual em um objeto datetime
     hora_atual_datetime += datetime.timedelta(hours=3) # Adiciona 3 horas ao horário atual
     hora_atual_3 = datetime.datetime.combine(datetime.datetime.today().date(), hora_atual_datetime.time())
-    hora_12 = datetime.time(12, 0)
+    hora_12 = datetime.time(13, 0)
     d_hora_12 = datetime.datetime.combine(datetime.datetime.today().date(), hora_12)
 
     if hora_atual_3 < d_hora_12:

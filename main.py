@@ -76,7 +76,7 @@ layout4 = [[sg.Text(key='nome_pista', size= 11, background_color= 'black', justi
            sg.Table(key= 'hist_b', headings=['DATA', 'PISTA', 'DIST', 'TRAP', 'SPLIT', 'BENDS', 'PESO', 'CAT', 'TEMPO', 'VEL MEDIA', 'POS', 'REMARKS'], max_col_width=18, auto_size_columns=True, justification='center', values= [],  background_color= 'black')],
            [sg.Text('TOTAL: A x B',background_color= 'black', size= 11, justification= 'center'), sg.Text(key='tot_a',background_color= 'black', size= 11, justification= 'center'), sg.Text(key='tot_b',background_color= 'black', size= 11, justification= 'center'), sg.Text('VENCEDOR:',background_color= 'black', size= 11, justification= 'center'), sg.Text(key='vencedor',background_color= 'black', size= 11, justification= 'center')],
 
-           [sg.Button('Voltar', size=6, font=('gotham', 12)), sg.Button('enviar no telegram', size=18, font=('gotham', 12))]]
+           [sg.Button('Voltar', size=6, font=('gotham', 12)), sg.Button('enviar no telegram', size=18, font=('gotham', 12)),  sg.Button('enviar A v B', size=18, font=('gotham', 12)), sg.Button('enviar B v A', size=18, font=('gotham', 12))]]
 
 janela_comp = None
 
@@ -165,6 +165,7 @@ while True:
 
                 dog_A = d_a[4:]
                 dog_B = d_b[4:]
+                print(dog_A)
                 d_dogs_a, d_dogs_b, venc = fun.compara(id_race,  dog_A, dog_B)
 
 
@@ -184,7 +185,14 @@ while True:
                         mensagem = f"{valores[0]} {opcao_escolhida1} \n {d_dogs_b[0]}{d_dogs_b[1]} ({venc[12]})  VENCE  {d_dogs_a[0]}{d_dogs_a[1]} ({venc[11]})"
                     elif venc[11] == venc[12]:
                         mensagem = f"{valores[0]} {opcao_escolhida1} \n {d_dogs_b[0]}{d_dogs_b[1]} ({venc[12]})  VENCE  {d_dogs_a[0]}{d_dogs_a[1]} ({venc[11]})"
-                bot.mens_telegram(mensagem)
+                    bot.mens_telegram(mensagem)
+                elif evento4 == 'enviar A v B':
+                    mensagem = f"{valores[0]} {opcao_escolhida1}\n {d_dogs_a[0]}{d_dogs_a[1]} ({venc[11]})  VENCE  {d_dogs_b[0]}{d_dogs_b[1]} ({venc[12]})"
+                    bot.mens_telegram(mensagem)
+                elif evento4 == 'enviar B v A':
+                    mensagem = f"{valores[0]} {opcao_escolhida1} \n {d_dogs_b[0]}{d_dogs_b[1]} ({venc[12]})  VENCE  {d_dogs_a[0]}{d_dogs_a[1]} ({venc[11]})"
+                    bot.mens_telegram(mensagem)
+
 
 
 # Fechando as janelas
