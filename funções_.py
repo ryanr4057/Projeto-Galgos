@@ -227,7 +227,7 @@ def coleta_hist_dog_aux(dog, race_id):
     tex = te[5:].strip()
 
     if len(tex) < 5:
-        tex = '00.00 A0 (00FFF00)'
+        tex = '00.00 A12 (01jan20)'
 
     d_brt = tex[9:].strip()
     dat_brt = d_brt.replace("(", "")
@@ -1034,6 +1034,21 @@ def ordena_races():
     return(orded_races)
 
 def proxima_hora( horas):
+
+    hora_atual_3 = hora_fuso()
+
+    horas_datetime = [datetime.datetime.combine(datetime.datetime.today().date(), datetime.datetime.strptime(h, '%H:%M').time()) for h in horas]
+
+    horas_futuras = [h for h in horas_datetime if h > hora_atual_3]
+
+    if len(horas_futuras) == 0:
+        return None
+
+    proxima_hora = min(horas_futuras)
+
+    return proxima_hora.strftime('%H:%M')
+
+def hora_fuso():
     hora_atual = datetime.datetime.now().time() # Obtém a hora atual do sistema
     hora_atual_datetime = datetime.datetime.combine(datetime.datetime.today(), hora_atual) # Converte a hora atual em um objeto datetime
     hora_atual_datetime += datetime.timedelta(hours=3) # Adiciona 3 horas ao horário atual
@@ -1048,18 +1063,7 @@ def proxima_hora( horas):
 
     if hora_atual_3 > data_hora:
         hora_atual_3 = hora_atual_3 - datetime.timedelta(hours=12)
-
-
-    horas_datetime = [datetime.datetime.combine(datetime.datetime.today().date(), datetime.datetime.strptime(h, '%H:%M').time()) for h in horas]
-
-    horas_futuras = [h for h in horas_datetime if h > hora_atual_3]
-
-    if len(horas_futuras) == 0:
-        return None
-
-    proxima_hora = min(horas_futuras)
-
-    return proxima_hora.strftime('%H:%M')
+    return hora_atual_3
 
 def atribui_dados(id_race, d_a, d_b, valores, janela_comp ):
     dist = f_busca.buscar_race_dist(id_race)
@@ -1421,6 +1425,596 @@ def index_prox_race(id_pista):
 
     return index
 
+# def comp_avançada(race_id, nome_a, nome_b):
+#     race_dist = f_busca.buscar_race_dist(race_id)
+#     race_cat = f_busca.buscar_race_cat(race_id)
+
+#     dog_a = f_busca.buscar_dog_nome(nome_a)
+#     dog_b = f_busca.buscar_dog_nome(nome_b)
+
+#     hist_a = f_busca.buscar_corridas_por_dog_dist(dog_a[0], race_dist[0])
+#     hist_b = f_busca.buscar_corridas_por_dog_dist(dog_b[0], race_dist[0])
+
+# def point(hist):
+#     corrid_points = 0
+#     medias = []
+
+#     data = []
+#     pista = []
+#     distancia = []
+#     trap = []
+#     split = []
+#     bends = []
+#     bends1 = []
+#     peso = []
+#     categoria = []
+#     tempo = []
+#     vel_media = []
+#     posicao = []
+#     remarks = []
+#     rec_cansa = []
+#     split_fin = []
+
+#     for i in range(0, len(hist)):
+#         data.append(hist[i][1])
+#         pista.append(hist[i][2])
+#         distancia.append(hist[i][3])
+#         trap.append(hist[i][4])
+#         split.append(hist[i][5])
+#         bends.append(hist[i][6])
+#         bends1.append(int(hist[i][6][0]))
+#         peso.append(hist[i][7])
+#         categoria.append(hist[i][8])
+#         tempo.append(hist[i][9])
+#         vel_media.append(hist[i][10])
+
+#         pos = hist[i][11]
+#         posicao.append(hist[i][11])
+#         remarks.append(hist[i][12])
+
+#         rec_cansa.append( int(hist[i][6][len(hist[i][6]) - 1])  )
+
+#     m_split = calcula_media(split)
+#     m_1bend = calcula_media(bends1)
+#     m_tempo = calcula_media(tempo)
+#     m_vel_media = calcula_media(vel_media)
+#     var_media = calcula_variacao_media(tempo)
+
+def compara_av(id_race, dog_A, dog_B):
+    race_dist = f_busca.buscar_race_dist(id_race)
+    race_cat = f_busca.buscar_race_cat(id_race)
+    d_dog_a = []
+    d_dog_b = []
+
+    dog_a = f_busca.buscar_dog_nome(dog_A)
+    dog_b = f_busca.buscar_dog_nome(dog_B)
+
+    brt_a = dog_a[4]
+    brt_b = dog_b[4]
+
+    d_brt_a = abs(diferenca_em_dias(dog_a[3]))
+    d_brt_b = abs(diferenca_em_dias(dog_b[3]))
+
+    hist_a = f_busca.buscar_corridas_por_dog_dist(dog_a[0], race_dist[0])
+    hist_b = f_busca.buscar_corridas_por_dog_dist(dog_b[0], race_dist[0])
+
+    splits_a = []
+    tempos_a = []
+    pos_a = []
+    pos_1bend_a = []
+    vel_media_a = []
+    rec_cansa_a = []
+    splits_fin_a = []
+
+    splits_b = []
+    tempos_b = []
+    pos_b = []
+    pos_1bend_b = []
+    vel_media_b = []
+    rec_cansa_b = []
+    splits_fin_b = []
+
+    for i in range(0, len(hist_a)):
+        splits_a.append(hist_a[i][5])
+        tempos_a.append(hist_a[i][9])
+        if len(hist_a[i][11]) > 2:
+            if hist_a[i][11][0] == '=':
+                n_po = (hist_a[i][11]).replace("=", "").strip()
+                po = int(n_po[0])
+            else:
+                po = int(hist_a[i][11][0])
+        else:
+            po = 6
+        pos_a.append(po)
+        vel_media_a.append(hist_a[i][10])
+
+        bends = hist_a[i][6]
+        rec_c = 0
+        bend1 = 6
+        split_fin = 0
+
+
+        if len(bends) > 0:
+            bend1 = int(bends[0])
+            ultbend = int(bends[len(bends) - 1])
+            rec_c = bend1 - po
+            split_fin =( int(bends[len(bends) - 2]) - po )
+
+        pos_1bend_a.append(bend1)
+        rec_cansa_a.append(rec_c)
+        splits_fin_a.append(split_fin)
+
+    for i in range(0, len(hist_b)):
+        splits_b.append(hist_b[i][5])
+        if (hist_b[i][9]) != None:
+            tempos_b.append(hist_b[i][9])
+        if len(hist_b[i][11]) > 2:
+            if hist_b[i][11][0] == '=':
+                n_po = (hist_a[i][11]).replace("=", "").strip()
+                po = int(n_po[0])
+            else:
+                po = int(hist_b[i][11][0])
+        else:
+            po = 6
+        pos_b.append(po)
+        vel_media_b.append(hist_b[i][10])
+
+        bends = hist_b[i][6]
+        rec_c = 0
+        bend1 = 6
+
+        if len(bends) > 0:
+            bend1 = int(bends[0])
+            ultbend = int(bends[len(bends) - 1])
+            rec_c = bend1 - po
+            split_fin = (int(bends[len(bends) - 2]) - po)
+        else:
+            split_fin = 0
+
+        pos_1bend_b.append(bend1)
+        rec_cansa_b.append(rec_c)
+        splits_fin_b.append(split_fin)
+
+    nome_a = dog_a[1]
+    trap_a = dog_a[2]
+    if len(hist_a) > 0:
+        peso_a = hist_a[0][7]
+    else:
+        peso_a = 0
+
+    if len(splits_a) >= 1:
+        m_split_a = calcula_media(splits_a)
+    else:
+        m_split_a = 20
+
+    if len(tempos_a) >= 1:
+        m_tempos_a = calcula_media(tempos_a)
+    else:
+        m_tempos_a = 50
+
+    if len(tempos_a) >= 1:
+        var_med_tempo_a = calcula_variacao_media(tempos_a)
+    else:
+        var_med_tempo_a = 5
+
+    if len(pos_a) >= 1:
+        m_pos_a = calcula_media(pos_a)
+    else:
+        m_pos_a = 6
+
+    if len(pos_1bend_a) >= 1:
+        m_1bend_a = calcula_media(pos_1bend_a)
+    else:
+        m_1bend_a = 6
+
+    if len(vel_media_a) >= 1:
+        m_vel_med_a = calcula_media(vel_media_a)
+    else:
+        m_vel_med_a = 0
+
+    if len(rec_cansa_a) >= 1:
+        m_rec_cansa_a = calcula_media(rec_cansa_a)
+    else:
+        m_rec_cansa_a = 0
+
+    if len(splits_fin_a) >= 1:
+        m_split_fin_a = calcula_media(splits_fin_a)
+
+    else:
+        m_split_fin_a = 0
+
+    if len(hist_a) > 0:
+        dias_sem_correr_a = abs(diferenca_em_dias(hist_a[0][1]))
+    else:
+        dias_sem_correr_a = 0
+
+    if len(hist_a) > 0:
+        cat_ant_a = hist_a[0][8]
+        status_cat_a = status_cat(cat_ant_a, race_cat)
+    else:
+        status_cat_a = 3
+
+    d_dog_a.append(trap_a)
+    d_dog_a.append(nome_a)
+    d_dog_a.append(dias_sem_correr_a)
+    d_dog_a.append(peso_a)
+    d_dog_a.append(m_split_a)
+    d_dog_a.append(m_1bend_a)
+    d_dog_a.append(m_pos_a)
+    d_dog_a.append(m_tempos_a)
+    d_dog_a.append(var_med_tempo_a)
+    d_dog_a.append(m_vel_med_a)
+    d_dog_a.append(m_rec_cansa_a)
+    d_dog_a.append(m_split_fin_a )
+    d_dog_a.append(status_cat_a)
+    d_dog_a.append(brt_a)
+    d_dog_a.append(d_brt_a)
+    d_dog_a.append(len(hist_a))
+
+
+    # print(d_dog_a)
+
+    nome_b = dog_b[1]
+    trap_b = dog_b[2]
+    if len(hist_b) > 0:
+        peso_b = hist_b[0][7]
+    else:
+        peso_b = 0
+
+    if len(splits_b) >= 1:
+        m_split_b = calcula_media(splits_b)
+    else:
+        m_split_b = 10
+
+    if len(tempos_b) >= 1:
+        m_tempos_b = calcula_media(tempos_b)
+    else:
+        m_tempos_b = 50
+
+    if len(tempos_b) >= 1:
+        var_med_tempo_b = calcula_variacao_media(tempos_b)
+    else:
+        var_med_tempo_b = 5
+
+    if len(pos_b) >= 1:
+        m_pos_b = calcula_media(pos_b)
+    else:
+        m_pos_b = 6
+
+    if len(pos_1bend_b) >= 1:
+        m_1bend_b = calcula_media(pos_1bend_b)
+    else:
+        m_1bend_b = 6
+
+    if len(vel_media_b) >= 1:
+        m_vel_med_b = calcula_media(vel_media_b)
+    else:
+        m_vel_med_b = 0
+
+    if len(rec_cansa_b) >= 1:
+        m_rec_cansa_b = calcula_media(rec_cansa_b)
+    else:
+        m_rec_cansa_b = 0
+
+    if len(splits_fin_b) >= 1:
+        m_split_fin_b = calcula_media(splits_fin_b)
+
+    else:
+        m_split_fin_b = 0
+
+    if len(hist_b) > 0:
+        dias_sem_correr_b = abs(diferenca_em_dias(hist_b[0][1]))
+    else:
+        dias_sem_correr_b = 0
+
+    if len(hist_b) > 0:
+        cat_ant_b = hist_b[0][8]
+        status_cat_b = status_cat(cat_ant_b, race_cat)
+    else:
+        status_cat_b = 3
+
+    d_dog_b.append(trap_b)
+    d_dog_b.append(nome_b)
+    d_dog_b.append(dias_sem_correr_b)
+    d_dog_b.append(peso_b)
+    d_dog_b.append(m_split_b)
+    d_dog_b.append(m_1bend_b)
+    d_dog_b.append(m_pos_b)
+    d_dog_b.append(m_tempos_b)
+    d_dog_b.append(var_med_tempo_b)
+    d_dog_b.append(m_vel_med_b)
+    d_dog_b.append(m_rec_cansa_b)
+    d_dog_b.append(m_split_fin_b )
+    d_dog_b.append(status_cat_b )
+    d_dog_b.append(brt_b)
+    d_dog_b.append(d_brt_b)
+    d_dog_b.append(len(hist_b))
+
+    # print(d_dog_b)
+
+    venc = compara_dif_av(d_dog_a, d_dog_b)
+
+    return(d_dog_a, d_dog_b, venc)
+
+def compara_dif_av(d_dog_a, d_dog_b):
+    a = d_dog_a
+    b = d_dog_b
+    tot_a = 0
+    tot_b = 0
+    venc = []
+
+    #dias sem correr
+    if a[2] > b[2]:
+        venc.append(b[0])
+
+    elif a[2] < b[2]:
+        venc.append(a[0])
+    else:
+        venc.append(0)
+
+    if a[2] > 25:
+        tot_a = tot_a - 0.5
+    if b[2] > 25:
+        tot_b = tot_b - 0.5
+
+    #peso
+    if a[3] > b[3]:
+        venc.append(a[0])
+    elif a[3] < b[3]:
+        venc.append(b[0])
+    else:
+        venc.append(0)
+
+    if a[3] > 30:
+        tot_a = tot_a + 0.5
+    elif a[3] < 26:
+        tot_a = tot_a - 0.5
+
+
+    if b[3] > 30:
+        tot_b = tot_b + 0.5
+    elif b[3] < 26:
+        tot_b = tot_b - 0.5
+
+    #split
+    if a[4] > b[4]:
+        venc.append(b[0])
+        if (a[4] - b[4]) > 0.2 :
+            tot_b = tot_b + 0.5
+        elif (a[4] - b[4]) > 0.15 :
+            tot_b = tot_b + 0.25
+        elif (a[4] - b[4]) > 0.1 :
+            tot_b = tot_b + 0.1
+
+    elif a[4] < b[4]:
+        venc.append(a[0])
+        if (b[4] - a[4]) > 0.2 :
+            tot_a = tot_a + 0.5
+        elif (b[4] - a[4]) > 0.15 :
+            tot_a = tot_a + .25
+        elif (b[4] - a[4]) > 0.1 :
+            tot_a = tot_a + 0.1
+
+    else:
+        venc.append(0)
+
+    #primeira bend
+    if a[5] > b[5]:
+        venc.append(b[0])
+        if (a[5] - b[5]) > 1.25 :
+            tot_b = tot_b + 0.5
+        elif (a[5] - b[5]) > 0.75 :
+            tot_b = tot_b + 0.25
+        elif (a[5] - b[5]) > 0.5 :
+            tot_b = tot_b + 0.1
+
+    elif a[5] < b[5]:
+        venc.append(a[0])
+        if (b[5] - a[5]) > 1.25 :
+            tot_a = tot_a + 0.5
+        elif (b[5] - a[5]) > 0.75 :
+            tot_a = tot_a + 0.25
+        elif (b[5] - a[5]) > 0.5 :
+            tot_a = tot_a + 0.1
+
+    else:
+        venc.append(0)
+
+    #finalização
+    if a[6] > b[6]:
+        venc.append(b[0])
+        if (a[6] - b[6]) > 1.25 :
+            tot_b = tot_b + 1
+        elif (a[6] - b[6]) > 0.75 :
+            tot_b = tot_b + 0.5
+        elif (a[6] - b[6]) > 0.5 :
+            tot_b = tot_b + 0.25
+
+    elif a[6] < b[6]:
+        venc.append(a[0])
+        if (b[6] - a[6]) > 1.25 :
+            tot_a = tot_a + 1
+        elif (b[6] - a[6]) > 0.75 :
+            tot_a = tot_a + 0.5
+        elif (b[6] - a[6]) > 0.5 :
+            tot_a = tot_a + 0.25
+
+    else:
+        venc.append(0)
+
+    #tempo
+    if a[7] > b[7]:
+        venc.append(b[0])
+        # if (a[7] - b[7]) > 0.15 :
+        #     tot_b = tot_b + 3
+        # elif (a[7] - b[7]) > 0.1 :
+        #     tot_b = tot_b + 2
+        # elif (a[7] - b[7]) > 0.05 :
+        #     tot_b = tot_b + 1
+
+    elif a[7] < b[7]:
+        venc.append(a[0])
+        # if (b[7] - a[7]) > 0.15 :
+        #     tot_a = tot_a + 3
+        # elif (b[7] - a[7]) > 0.1 :
+        #     tot_a = tot_a + 2
+        # elif (b[7] - a[7]) > 0.05 :
+        #     tot_a = tot_a + 1
+
+    else:
+        venc.append(0)
+
+    #variação media de tempo
+    if a[8] > b[8]:
+        venc.append(b[0])
+    elif a[8] < b[8]:
+        venc.append(a[0])
+    else:
+        venc.append(0)
+
+    if b[8] < 0.1:
+        tot_b = tot_b + 0.5
+    elif b[8] < 0.3:
+        tot_b = tot_b + 0.25
+    elif b[8] < 0.5:
+        tot_b = tot_b + 0.1
+
+    if a[8] < 0.1:
+        tot_a = tot_a + 0.5
+    elif a[8] < 0.3:
+        tot_a = tot_a + 0.25
+    elif a[8] < 0.5:
+        tot_a = tot_a + 0.1
+
+     #velocidade media
+    if a[9] > b[9]:
+        venc.append(a[0])
+        # if (a[9] - b[9]) > 0.2 :
+        #     tot_a = tot_a + 3
+        # elif (a[9] - b[9]) > 0.15 :
+        #     tot_a = tot_a + 2
+        # elif (a[9] - b[9]) > 0.1 :
+        #     tot_a = tot_a + 1
+
+    elif a[9] < b[9]:
+        venc.append(b[0])
+        # if (b[9] - a[9]) > 0.2 :
+        #     tot_b = tot_b + 3
+        # elif (b[9] - a[9]) > 0.15 :
+        #     tot_b = tot_b + 2
+        # elif (b[9] - a[9]) > 0.1 :
+        #     tot_b = tot_b + 1
+
+    else:
+        venc.append(0)
+
+     #recupera / cansa
+    if a[10] > b[10]:
+        venc.append(a[0])
+        if (a[10] - b[10]) > 1 :
+            tot_a = tot_a + 0.5
+        elif (a[10] - b[10]) > 0.75 :
+            tot_a = tot_a + 0.25
+        elif (a[10] - b[10]) > 0.5 :
+            tot_a = tot_a + 0.1
+
+    elif a[10] < b[10]:
+        venc.append(b[0])
+        if (b[10] - a[10]) > 1 :
+            tot_b = tot_b + 0.5
+        elif (b[10] - a[10]) > 0.75 :
+            tot_b = tot_b + 0.25
+        elif (b[10] - a[10]) > 0.5 :
+            tot_b = tot_b + 0.1
+
+    else:
+        venc.append(0)
+
+       #split final
+    if a[11] > b[11]:
+        venc.append(a[0])
+        # if (a[11] - b[11]) > 1 :
+        #     tot_a = tot_a + 2
+        # elif (a[11] - b[11]) > 0.75 :
+        #     tot_a = tot_a + 1
+        # elif (a[11] - b[11]) > 0.5 :
+        #     tot_a = tot_a + 0.5
+
+    elif a[11] < b[11]:
+        venc.append(b[0])
+        # if (b[11] - a[11]) > 1 :
+        #     tot_b = tot_b + 2
+        # elif (b[11] - a[11]) > 0.75 :
+        #     tot_b = tot_b + 1
+        # elif (b[11] - a[11]) > 0.5 :
+        #     tot_b = tot_b + 0.5
+    else:
+        venc.append(0)
+
+    if a[12] > b[12]:
+        venc.append(a[0])
+    elif a[12] < b[12]:
+        venc.append(b[0])
+    else:
+        venc.append(0)
+
+    if a[12] == 2:
+        tot_a = tot_a + 0.7
+    elif a[12] == 0:
+        tot_a = tot_a - 1.5
+
+
+    if b[12] == 2:
+        tot_b = tot_b + 0.7
+    elif b[12] == 0:
+        tot_b = tot_b - 1.5
+
+    # 1bend + recuperação
+    if a[5] > b[5] and a[10] > b[10]:
+        if a[5] - b[5] > 0.5 and a[10] - b[10] > 0.5:
+            tot_a = tot_a + 3
+
+    elif b[5] > a[5] and b[10] > a[10]:
+        if b[5] - a[5] > 0.5 and b[10] - a[10] > 0.5:
+            tot_b = tot_b + 3
+
+
+    # media de tempo + quantidade de races + variação media
+    if a[7] > b[7] and a[15] >= 3 and a[8] < 0.2:
+        tot_a = tot_a + 4
+
+    elif b[7] > a[7] and b[15] >= 3 and b[8] < 0.2:
+        tot_b = tot_b + 4
+
+    # recuperador vs cansa + categoria
+    if a[10] > b[10] and a[6] < b[6] and (a[12] == 1 or a[12] == 2):
+        if a[5] + a[10] > b[5] + b[10]:
+            if abs((a[5] + a[10]) - (b[5] + b[10])) > 0.5:
+                tot_a = tot_a + 4
+
+    elif a[10] < b[10] and a[6] > b[6] and (b[12] == 1 or b[12] == 2):
+        if a[5] + a[10] < b[5] + b[10]:
+            if abs((a[5] + a[10]) - (b[5] + b[10])) > 0.5:
+                tot_b = tot_b + 4
+
+    #media de tempo + categoria
+    if a[7] > b[7] and (a[12] == 1 or a[12] == 2) and b[12] == 0:
+        if abs(a[7] - b[7]) > 0.3:
+            tot_a = tot_a + 3
+    elif a[7] < b[7] and (b[12] == 1 or b[12] == 2) and a[12] == 0:
+        if abs(a[7] - b[7]) > 0.3:
+            tot_b = tot_b + 3
+
+    if a[15] == 0:
+        tot_a = 0
+    if b[15] == 0:
+        tot_b = 0
+
+    venc.append( round(tot_a, 2))
+    venc.append(round(tot_b, 2))
+
+    # print(venc)
+    return(venc)
 
 
 

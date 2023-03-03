@@ -11,6 +11,6 @@ def mens_telegram(message_text):
 
 
     async def enviar_mensagem():
-        await bot.send_message(chat_id=chat_id, text=message_text)
+        await bot.send_message(chat_id=chat_id, text=message_text, parse_mode='Markdown')
 
     asyncio.run(enviar_mensagem())

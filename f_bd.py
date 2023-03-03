@@ -84,6 +84,10 @@ def editar_dog(id, novo_nome, nova_race_id):
     c.execute("UPDATE dogs SET nome = ?, race_id = ? WHERE id = ?", (novo_nome, nova_race_id, id))
     conn.commit()
 
+def editar_dog_brt(dbrt, id):
+    c.execute("UPDATE dogs SET data_brt = ? WHERE id = ?", (dbrt, id,))
+    conn.commit()
+
 # Apagar dados na tabela dogs
 def apagar_dog(id):
     c.execute("DELETE FROM dogs WHERE id = ?", (id,))
