@@ -10,7 +10,7 @@ import time
 race_count = 1
 env_mens = []
 
-def scrap():
+while True:
    subprocess.Popen(
       '"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" --remote-debugging-port=9222', shell=True)
 
@@ -41,9 +41,8 @@ def scrap():
    except Exception:
       subprocess.Popen('taskkill /F /IM chrome.exe', shell=True)
       time.sleep(5)
-      scrap()
 
-scrap()
+
 
 
 
