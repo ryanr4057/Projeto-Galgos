@@ -2020,7 +2020,7 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
         tot_b = tot_b + 4
 
     #races curtas
-    if race_dist < 300:
+    if race_dist < 350:
 
         # 1 bend + media de tempo
         if a[5] < b[5] and abs(a[5] - b[5]) > 1:
@@ -2029,11 +2029,6 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
         elif b[5] < a[5] and abs(a[5] - b[5]) > 1:
             if b[7] < a[7] and abs(a[7] - b[7]) > 0.15:
                 tot_b = tot_b + 4
-
-
-
-
-
 
     if a[15] <= 1:
         tot_a = 0
