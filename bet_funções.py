@@ -108,24 +108,26 @@ def proc_avb_w(driver, race_count, env_mens):
 
                     d_dogs_a, d_dogs_b, venc = f.compara_av(race_id, a, b )
 
-                    if venc[11] > venc[12] and abs(venc[11] - venc[12]) > 5:
-                        mensagem = f"RR TIPS - AvB: 🐶\n \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*\n  \nVENCE:   \n \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})\n \nOdd: @{odds[i].get_text()}💸\n \nLink:{driver.current_url}"
-                        ind = mensagem.find('@')
-                        # print(ind)
-                        v_mens = mensagem[:ind]
-                        # print(v_mens)
-                        if (v_mens in env_mens) is False:
-                            bot.mens_telegram(mensagem)
-                            env_mens.append(v_mens)
-                    elif venc[11] < venc[12] and abs(venc[11] - venc[12]) > 5:
-                        mensagem = f"RR TIPS - AvB: 🐶\n \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*\n  \nVENCE:   \n \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})\n \nOdd: @{odds[i+1].get_text()}💸\n \nLink:{driver.current_url}"
-                        ind = mensagem.find('@')
-                        # print(ind)
-                        v_mens = mensagem[:ind]
-                        # print(v_mens)
-                        if (v_mens in env_mens) is False:
-                            bot.mens_telegram(mensagem)
-                            env_mens.append(v_mens)
+                    if venc[11] > venc[12] and abs(venc[11] - venc[12]) > 7:
+                        if (d_dogs_a[12] == 2 or d_dogs_a[12] == 1):
+                            mensagem = f"RR TIPS - AvB: 🐶\n \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*\n  \nVENCE:   \n \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})\n \nOdd: @{odds[i].get_text()}💸\n \nLink:{driver.current_url}"
+                            ind = mensagem.find('@')
+                            # print(ind)
+                            v_mens = mensagem[:ind]
+                            # print(v_mens)
+                            if (v_mens in env_mens) is False:
+                                bot.mens_telegram(mensagem)
+                                env_mens.append(v_mens)
+                    elif venc[11] < venc[12] and abs(venc[11] - venc[12]) > 7:
+                        if (d_dogs_b[12] == 2 or d_dogs_b[12] == 1):
+                            mensagem = f"RR TIPS - AvB: 🐶\n \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*\n  \nVENCE:   \n \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})\n \nOdd: @{odds[i+1].get_text()}💸\n \nLink:{driver.current_url}"
+                            ind = mensagem.find('@')
+                            # print(ind)
+                            v_mens = mensagem[:ind]
+                            # print(v_mens)
+                            if (v_mens in env_mens) is False:
+                                bot.mens_telegram(mensagem)
+                                env_mens.append(v_mens)
 
             driver, race_count = proc_prox_race(driver, race_count)
             time.sleep(3)

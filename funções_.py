@@ -1732,11 +1732,11 @@ def compara_av(id_race, dog_A, dog_B):
 
     # print(d_dog_b)
 
-    venc = compara_dif_av(d_dog_a, d_dog_b)
+    venc = compara_dif_av(d_dog_a, d_dog_b, race_dist[0])
 
     return(d_dog_a, d_dog_b, venc)
 
-def compara_dif_av(d_dog_a, d_dog_b):
+def compara_dif_av(d_dog_a, d_dog_b, race_dist):
     a = d_dog_a
     b = d_dog_b
     tot_a = 0
@@ -1958,25 +1958,25 @@ def compara_dif_av(d_dog_a, d_dog_b):
     else:
         venc.append(0)
 
-    if a[12] == 2:
-        tot_a = tot_a + 0.7
-    elif a[12] == 0:
-        tot_a = tot_a - 1.5
+    # if a[12] == 2:
+    #     tot_a = tot_a + 0.7
+    # elif a[12] == 0:
+    #     tot_a = tot_a - 1.5
 
 
-    if b[12] == 2:
-        tot_b = tot_b + 0.7
-    elif b[12] == 0:
-        tot_b = tot_b - 1.5
+    # if b[12] == 2:
+    #     tot_b = tot_b + 0.7
+    # elif b[12] == 0:
+    #     tot_b = tot_b - 1.5
 
     # 1bend + recuperação
     if a[5] > b[5] and a[10] > b[10]:
         if a[5] - b[5] > 0.5 and a[10] - b[10] > 0.5:
-            tot_a = tot_a + 3
+            tot_a = tot_a + 4
 
     elif b[5] > a[5] and b[10] > a[10]:
         if b[5] - a[5] > 0.5 and b[10] - a[10] > 0.5:
-            tot_b = tot_b + 3
+            tot_b = tot_b + 4
 
 
     # media de tempo + quantidade de races + variação media
@@ -2005,9 +2005,39 @@ def compara_dif_av(d_dog_a, d_dog_b):
         if abs(a[7] - b[7]) > 0.3:
             tot_b = tot_b + 3
 
-    if a[15] == 0:
+    #media de tempo + variação media
+    if (a[7] + a[8]) < (b[7] - b[8]):
+        if(abs((a[7] + a[8]) - (b[7] - b[8])) > 0.1):
+            tot_a = tot_a + 4
+    elif (a[7] + a[8]) > (b[7] - b[8]):
+        if(abs((a[7] + a[8]) - (b[7] - b[8])) > 0.1):
+            tot_b = tot_b + 4
+
+    #split + mantem
+    if abs(a[4] - b[4]) > 0.15 and a[5] < 2.5 and a[10] >=-0.5:
+        tot_a = tot_a + 4
+    elif abs(b[4] - a[4]) > 0.15 and b[5] < 2.5 and b[10] >=-0.5:
+        tot_b = tot_b + 4
+
+    #races curtas
+    if race_dist < 300:
+
+        # 1 bend + media de tempo
+        if a[5] < b[5] and abs(a[5] - b[5]) > 1:
+            if a[7] < b[7] and abs(a[7] - b[7]) > 0.15:
+                tot_a = tot_a + 4
+        elif b[5] < a[5] and abs(a[5] - b[5]) > 1:
+            if b[7] < a[7] and abs(a[7] - b[7]) > 0.15:
+                tot_b = tot_b + 4
+
+
+
+
+
+
+    if a[15] <= 1:
         tot_a = 0
-    if b[15] == 0:
+    if b[15] <= 1:
         tot_b = 0
 
     venc.append( round(tot_a, 2))
