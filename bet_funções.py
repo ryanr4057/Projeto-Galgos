@@ -20,7 +20,8 @@ def proc_prox_race(driver, race_count):
     qtd_race = len(p_race) - 1
     if qtd_race < race_count:
         race_count = 0
-    p_race[race_count].click()
+    if len(p_race) != 0:
+        p_race[race_count].click()
     time.sleep(3)
 
     current_url = driver.current_url

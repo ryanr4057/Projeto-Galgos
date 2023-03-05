@@ -1401,6 +1401,61 @@ def status_cat(cat_atual, cat_race):
 
     return(status)
 
+def status_cat_med(cats_dog, cat_race):
+    status = 3
+    cats = []
+    soma = 0
+
+    tipo_race = cat_race[0][0]
+
+    for i in range(0, len(cats_dog)):
+
+        if tipo_race == "A" == cats_dog[i][0] :
+            cats.append(int(cats_dog[i][1:]))
+
+        elif tipo_race == "D" == cats_dog[i][0] :
+            cats.append(int(cats_dog[i][1:]))
+
+        elif tipo_race == "S" == cats_dog[i][0] :
+            cats.append(int(cats_dog[i][1:]))
+
+        elif tipo_race == "B" == cats_dog[i][0] :
+            cats.append(int(cats_dog[i][1:]))
+
+
+        elif tipo_race == "A" and cats_dog[i][0] == "O" :
+            cats.append(0)
+
+        elif tipo_race == "O" and cats_dog[i][0] != "O" :
+            cats.append(0.5)
+
+        elif tipo_race == "S" and cats_dog[i][0] == "O" :
+            cats.append(0)
+
+    for i in range(0, len(cats)):
+        soma = soma + cats[i]
+    med_cat = soma/len(cats)
+
+    if med_cat < int(cat_race[0][1:]):
+        status = 2
+    elif med_cat == int(cat_race[0][1:]):
+        status = 1
+    elif med_cat > int(cat_race[0][1:]):
+        status = 0
+
+    elif cats_dog[i][0][0] == "T":
+        status = 0
+
+    elif cats_dog[i][0][0] == "I":
+        status = 0
+    elif cats_dog[i][0][0] == "H":
+        status = 0
+
+    else:
+        print(f'nao entrou na cat {cats_dog[i]}')
+
+    return(status)
+
 def index_prox_race(id_pista):
     i_races = f_busca.buscar_races_por_pista_i(id_pista)
     races_h = f_busca.buscar_races_h_por_pista(id_pista)
@@ -1628,9 +1683,18 @@ def compara_av(id_race, dog_A, dog_B):
     else:
         dias_sem_correr_a = 0
 
+    # if len(hist_a) > 0:
+    #     cat_ant_a = hist_a[0][8]
+    #     status_cat_a = status_cat(cat_ant_a, race_cat)
+    # else:
+    #     status_cat_a = 3
+
+    cats_a = []
+
     if len(hist_a) > 0:
-        cat_ant_a = hist_a[0][8]
-        status_cat_a = status_cat(cat_ant_a, race_cat)
+        for i in range(0, len(hist_a)):
+            cats_a.append = hist_a[i][8]
+        status_cat_a = status_cat_med(cats_a, race_cat)
     else:
         status_cat_a = 3
 
@@ -1707,9 +1771,17 @@ def compara_av(id_race, dog_A, dog_B):
     else:
         dias_sem_correr_b = 0
 
+    # if len(hist_b) > 0:
+    #     cat_ant_b = hist_b[0][8]
+    #     status_cat_b = status_cat(cat_ant_b, race_cat)
+    # else:
+    #     status_cat_b = 3
+    cats_b = []
+
     if len(hist_b) > 0:
-        cat_ant_b = hist_b[0][8]
-        status_cat_b = status_cat(cat_ant_b, race_cat)
+        for i in range(0, len(hist_b)):
+            cats_b.append = hist_b[i][8]
+        status_cat_b = status_cat_med(cats_b, race_cat)
     else:
         status_cat_b = 3
 
@@ -1979,7 +2051,6 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
             if b[5] - a[5] > 0.5 and b[10] - a[10] > 0.5:
                 tot_b = tot_b + 4
 
-
         # media de tempo + quantidade de races + variação media
         if a[7] > b[7] and a[15] >= 3 and a[8] < 0.2:
             tot_a = tot_a + 4
@@ -2022,7 +2093,6 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
 
     #races curtas
     elif race_dist < 350:
-
         # 1 bend + media de tempo
         if a[5] < b[5] and abs(a[5] - b[5]) > 1:
             if a[7] < b[7] and abs(a[7] - b[7]) > 0.15:
@@ -2038,7 +2108,6 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
         elif (a[7] + a[8]) > (b[7] - b[8]):
             if(abs((a[7] + a[8]) - (b[7] - b[8])) > 0.1):
                 tot_b = tot_b + 4
-
 
 
     if a[15] <= 1:
