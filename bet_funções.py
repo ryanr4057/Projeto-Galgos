@@ -56,32 +56,36 @@ def proc_avb_w(driver, race_count, env_mens):
                     a = dogs[i].get_text().strip()
                     b = dogs[i+1].get_text().strip()
 
-                    d_dogs_a, d_dogs_b, venc = f.compara_av(race_id, a, b )
+                    dog_a = fbd.buscar_dog_nome(a)
+                    dog_b = fbd.buscar_dog_nome(b)
 
-                    if venc[11] > venc[12] and abs(venc[11] - venc[12]) > 4 and venc[11] > 8 and venc[12] < 1.76:
-                        if (d_dogs_a[12] == 2 or d_dogs_a[12] == 1) and (d_dogs_b[12] != 2) and (venc[11] and venc[12] != 0) :
-                            mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url}"
-                            ind = mensagem.find('@')
-                            # print(ind)
-                            v_mens = mensagem[:ind]
-                            # print(v_mens)
-                            if (v_mens in env_mens) is False:
-                                bot.mens_telegram(mensagem)
-                                env_mens.append(v_mens)
-                    elif venc[11] < venc[12] and abs(venc[11] - venc[12]) > 4 and venc[12] > 8 and venc[11] < 1.76:
-                        if (d_dogs_b[12] == 2 or d_dogs_b[12] == 1) and (d_dogs_a[12] != 2) and (venc[11] and venc[12] != 0) :
-                            mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*\n  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url}"
-                            ind = mensagem.find('@')
-                            # print(ind)
-                            v_mens = mensagem[:ind]
-                            # print(v_mens)
-                            if (v_mens in env_mens) is False:
-                                bot.mens_telegram(mensagem)
-                                env_mens.append(v_mens)
+                    if dog_a != None and dog_b != None:
+
+                        d_dogs_a, d_dogs_b, venc = f.compara_av(race_id, a, b )
+
+                        if venc[11] > venc[12] and abs(venc[11] - venc[12]) > 4 and venc[11] > 8 and venc[12] < 1.76:
+                            if (d_dogs_a[12] == 2 or d_dogs_a[12] == 1) and (d_dogs_b[12] != 2) and (venc[11] and venc[12] != 0) :
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url}"
+                                ind = mensagem.find('@')
+                                # print(ind)
+                                v_mens = mensagem[:ind]
+                                # print(v_mens)
+                                if (v_mens in env_mens) is False:
+                                    bot.mens_telegram(mensagem)
+                                    env_mens.append(v_mens)
+                        elif venc[11] < venc[12] and abs(venc[11] - venc[12]) > 4 and venc[12] > 8 and venc[11] < 1.76:
+                            if (d_dogs_b[12] == 2 or d_dogs_b[12] == 1) and (d_dogs_a[12] != 2) and (venc[11] and venc[12] != 0) :
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*\n  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url}"
+                                ind = mensagem.find('@')
+                                # print(ind)
+                                v_mens = mensagem[:ind]
+                                # print(v_mens)
+                                if (v_mens in env_mens) is False:
+                                    bot.mens_telegram(mensagem)
+                                    env_mens.append(v_mens)
 
             driver, race_count = proc_prox_race(driver, race_count)
             time.sleep(3)
-
 
         else:
             driver, race_count = proc_prox_race(driver, race_count)
