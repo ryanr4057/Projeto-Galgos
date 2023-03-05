@@ -1434,7 +1434,10 @@ def status_cat_med(cats_dog, cat_race):
 
     for i in range(0, len(cats)):
         soma = soma + cats[i]
-    med_cat = soma/len(cats)
+    if len(cats) > 0:
+        med_cat = soma/len(cats)
+    else:
+        med_cat = 0
 
     if tipo_race != "O":
         if med_cat < int(cat_race[0][1:]):
