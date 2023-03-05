@@ -1436,23 +1436,42 @@ def status_cat_med(cats_dog, cat_race):
         soma = soma + cats[i]
     med_cat = soma/len(cats)
 
-    if med_cat < int(cat_race[0][1:]):
-        status = 2
-    elif med_cat == int(cat_race[0][1:]):
-        status = 1
-    elif med_cat > int(cat_race[0][1:]):
-        status = 0
+    if tipo_race != "O":
+        if med_cat < int(cat_race[0][1:]):
+            status = 2
+        elif med_cat == int(cat_race[0][1:]):
+            status = 1
+        elif med_cat > int(cat_race[0][1:]):
+            status = 0
 
-    elif cats_dog[i][0][0] == "T":
-        status = 0
+        elif cats_dog[i][0][0] == "T":
+            status = 0
 
-    elif cats_dog[i][0][0] == "I":
-        status = 0
-    elif cats_dog[i][0][0] == "H":
-        status = 0
+        elif cats_dog[i][0][0] == "I":
+            status = 0
+        elif cats_dog[i][0][0] == "H":
+            status = 0
+        else:
+            print(f'nao entrou na cat {cats_dog[i]}')
 
-    else:
-        print(f'nao entrou na cat {cats_dog[i]}')
+    elif tipo_race == "O":
+        if cats_dog[0][0] == "O":
+            status = 1
+        elif med_cat < 1.5:
+            status = 2
+        elif med_cat == 1.5:
+            status = 1
+        elif med_cat > 1.5:
+            status = 0
+
+        elif cats_dog[i][0][0] == "T":
+            status = 0
+        elif cats_dog[i][0][0] == "I":
+            status = 0
+        elif cats_dog[i][0][0] == "H":
+            status = 0
+        else:
+            print(f'nao entrou na cat {cats_dog[i]}')
 
     return(status)
 
@@ -1693,7 +1712,7 @@ def compara_av(id_race, dog_A, dog_B):
 
     if len(hist_a) > 0:
         for i in range(0, len(hist_a)):
-            cats_a.append = hist_a[i][8]
+            cats_a.append(hist_a[i][8])
         status_cat_a = status_cat_med(cats_a, race_cat)
     else:
         status_cat_a = 3
@@ -1780,7 +1799,7 @@ def compara_av(id_race, dog_A, dog_B):
 
     if len(hist_b) > 0:
         for i in range(0, len(hist_b)):
-            cats_b.append = hist_b[i][8]
+            cats_b.append(hist_b[i][8])
         status_cat_b = status_cat_med(cats_b, race_cat)
     else:
         status_cat_b = 3
