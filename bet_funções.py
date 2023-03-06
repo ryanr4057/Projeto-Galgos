@@ -20,8 +20,7 @@ def proc_prox_race(driver, race_count):
     qtd_race = len(p_race) - 1
     if qtd_race < race_count:
         race_count = 0
-    if len(p_race) != 0:
-        p_race[race_count].click()
+    p_race[race_count].click()
     time.sleep(3)
 
     current_url = driver.current_url
@@ -31,7 +30,6 @@ def proc_prox_race(driver, race_count):
     elif race_count == len(p_race) - 1:
         time.sleep(30)
         race_count = 0
-
     return driver, race_count
 
 def proc_avb_w(driver, race_count, env_mens):
@@ -63,9 +61,16 @@ def proc_avb_w(driver, race_count, env_mens):
                     if dog_a != None and dog_b != None:
 
                         d_dogs_a, d_dogs_b, venc = f.compara_av(race_id, a, b )
+                        print(venc[11])
+                        print(venc[12])
+                        print(d_dogs_a[12])
+                        print(d_dogs_b[12])
+
+
+
 
                         if venc[11] > venc[12] and abs(venc[11] - venc[12]) > 4 and venc[11] > 8 and venc[12] < 1.76:
-                            if (d_dogs_a[12] == 2 or d_dogs_a[12] == 1) and (d_dogs_b[12] != 2) and (venc[11] and venc[12] != 0) :
+                            if ((d_dogs_a[12] == 2 or d_dogs_a[12] == 1) and (d_dogs_b[12] != 2) and (venc[11] and venc[12] != 0)) or ((d_dogs_a[12] == d_dogs_b[12] and d_dogs_a[12] != 0) and (venc[11] and venc[12] != 0)) :
                                 mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url}"
                                 ind = mensagem.find('@')
                                 # print(ind)
@@ -75,7 +80,7 @@ def proc_avb_w(driver, race_count, env_mens):
                                     bot.mens_telegram(mensagem)
                                     env_mens.append(v_mens)
                         elif venc[11] < venc[12] and abs(venc[11] - venc[12]) > 4 and venc[12] > 8 and venc[11] < 1.76:
-                            if (d_dogs_b[12] == 2 or d_dogs_b[12] == 1) and (d_dogs_a[12] != 2) and (venc[11] and venc[12] != 0) :
+                            if (d_dogs_b[12] == 2 or d_dogs_b[12] == 1) and (d_dogs_a[12] != 2) and (venc[11] and venc[12] != 0) or ((d_dogs_a[12] == d_dogs_b[12] and d_dogs_b[12] != 0) and (venc[11] and venc[12] != 0)):
                                 mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*\n  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url}"
                                 ind = mensagem.find('@')
                                 # print(ind)
