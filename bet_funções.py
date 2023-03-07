@@ -68,7 +68,7 @@ def proc_avb_w(driver, race_count, env_mens):
                         d_dogs_a, d_dogs_b, venc = f.compara_av(race_id, a, b )
                         
                         if venc[11] > venc[12] and abs(venc[11] - venc[12]) > 4 and venc[11] >= 9 and venc[12] < 1.76:
-                            if (d_dogs_b[1] != n_dogs[0]) and (d_dogs_b[1] != n_dogs[1]):
+                            if (d_dogs_b[1] != n_dogs[0]):
                                 if ((d_dogs_a[12] == 2 or d_dogs_a[12] == 1) and (d_dogs_b[12] != 2) and (venc[11] and venc[12] != 0)) or ((d_dogs_a[12] == d_dogs_b[12] and d_dogs_a[12] != 0) and (venc[11] and venc[12] != 0)) :
                                     if 1.59 > float(odds[i].get_text()) <= 2.00: 
                                         mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url}"
@@ -90,7 +90,7 @@ def proc_avb_w(driver, race_count, env_mens):
                                             env_mens.append(v_mens)
 
                         elif venc[11] < venc[12] and abs(venc[11] - venc[12]) > 4 and venc[12] >= 9 and venc[11] < 1.76:
-                            if (d_dogs_a[1] != n_dogs[0]) and (d_dogs_a[1] != n_dogs[1]):
+                            if (d_dogs_a[1] != n_dogs[0]):
                                 if (d_dogs_b[12] == 2 or d_dogs_b[12] == 1) and (d_dogs_a[12] != 2) and (venc[11] and venc[12] != 0) or ((d_dogs_a[12] == d_dogs_b[12] and d_dogs_b[12] != 0) and (venc[11] and venc[12] != 0)):
                                     if 1.59 > float(odds[i+1].get_text()) <= 2.00:
                                         mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*\n  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url}"
