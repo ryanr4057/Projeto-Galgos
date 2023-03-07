@@ -93,9 +93,13 @@ def buscar_dog_rid(nome):
     c.execute("SELECT race_id FROM dogs WHERE nome = ?", (nome,))
     return c.fetchone()
 
-def buscar_dog_erro(dbrt):
-    c.execute("SELECT id FROM dogs WHERE data_brt = ?", (dbrt,))
-    return c.fetchall()
+def buscar_dog_tempo_brt(id):
+    c.execute("SELECT tempo_brt FROM dogs WHERE id = ?", (id,))
+    return c.fetchone()
+
+def buscar_dog_data_brt(id):
+    c.execute("SELECT data_brt FROM dogs WHERE id = ?", (id,))
+    return c.fetchone()
 
 def buscar_dog_nome(nome):
     c.execute("SELECT * FROM dogs WHERE nome = ?", (nome,))

@@ -2113,6 +2113,14 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
         elif abs(b[4] - a[4]) > 0.15 and b[5] < 2.5 and b[10] >=-0.5:
             tot_b = tot_b + 4
 
+        #brt tempo + data
+        if (a[13] < b[13]) and abs(a[13] - b[13]) > 0.15:
+            if (abs(diferenca_em_dias(a[14])) < abs(diferenca_em_dias(b[14]))) and abs(diferenca_em_dias(a[14])) < 17:
+                tot_a = tot_a + 4
+        elif (a[13] > b[13]) and abs(a[13] - b[13]) > 0.15:
+            if (abs(diferenca_em_dias(b[14])) < abs(diferenca_em_dias(a[14]))) and abs(diferenca_em_dias(b[14])) < 17:
+                tot_b = tot_b + 4
+
     #races curtas
     elif race_dist < 350:
         # 1 bend + media de tempo

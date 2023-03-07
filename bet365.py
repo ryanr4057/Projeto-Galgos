@@ -35,12 +35,12 @@ while True:
    driver.get(current_url)
 
    time.sleep(5)
-   # try:
-   f.proc_avb_w(driver, race_count, env_mens)
+   try:
+      f.proc_avb_w(driver, race_count, env_mens)
 
-   # except Exception:
-   #    subprocess.Popen('taskkill /F /IM chrome.exe', shell=True)
-   #    time.sleep(5)
+   except Exception:
+      subprocess.Popen('taskkill /F /IM chrome.exe', shell=True)
+      time.sleep(5)
 
 
 
