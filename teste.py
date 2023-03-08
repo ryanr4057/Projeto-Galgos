@@ -18,15 +18,18 @@
 
 # window.close()
 
+odd = 1.83
 
+# import keyboard
 
-import keyboard
+# while True:
+#     event = keyboard.read_event()
 
-while True:
-    event = keyboard.read_event()
+#     if event.event_type == 'down':
+#         print('Tecla pressionada:', event)
 
-    if event.event_type == 'down':
-        print('Tecla pressionada:', event)
+#     if event.event_type == 'up':
+#         print('Tecla liberada:', event)
 
-    if event.event_type == 'up':
-        print('Tecla liberada:', event)
+if (1.59 < float(odd) <= 1.90):
+    print('aaaa')
