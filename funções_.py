@@ -104,7 +104,7 @@ def coleta_dogs_race_aux(pista_races_links, pista_id):
         time.sleep(0.1)
 
         top = soup.find('div', {'class': 'racePager'})
-        if top is None:
+        while top is None:
             print("top erro")
             tag = 'div'
             t1 = 'class'
@@ -112,7 +112,7 @@ def coleta_dogs_race_aux(pista_races_links, pista_id):
             top = v_campo(soup,driver,tag,t1,t2)
 
         h = top.find('h3', {'id': 'pagerCardTime'})
-        if h is None:
+        while h is None:
             print("horario erro")
             tag = 'h3'
             t1 = 'id'
