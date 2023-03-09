@@ -1,11 +1,14 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from bs4 import BeautifulSoup
 import bet_funções as f
 from selenium.webdriver.support import expected_conditions as EC
 import subprocess
 import time
+import pyautogui
 
 race_count = 1
 env_mens = []
@@ -21,9 +24,28 @@ while True:
 
       driver = webdriver.Chrome(options=options)
       driver.maximize_window()
+      # driver.get('https://www.bet365.com/#/HO/')
+      time.sleep(3)
+
+      pyautogui.hotkey('ctrl','t')
+      pyautogui.typewrite('bet365.com')
+      pyautogui.press('enter')
+
+      time.sleep(2)
+
+      time.sleep(2)
+
+      driver.switch_to.window(driver.window_handles[1])
+
       driver.get('https://www.bet365.com/#/IP/B4')
 
-      time.sleep(5)
+      # pyautogui.click(289,18)
+
+      # for i in range(14):
+      #    pyautogui.press('tab')
+      # pyautogui.press('enter')
+
+      time.sleep(2)
 
       corrida = driver.find_elements(By.CLASS_NAME,"ovm-RacingViewAllLink ")
 
@@ -31,16 +53,16 @@ while True:
       while len(corrida) ==0:
          corrida = driver.find_elements(By.CLASS_NAME,"ovm-RacingViewAllLink ")
          time.sleep(1)
-         
+
       corrida[0].click()
 
       time.sleep(3)
 
-      current_url = driver.current_url
-      driver.get(current_url)
+      # current_url = driver.current_url
+      # driver.get(current_url)
 
-      time.sleep(5)
-      
+      # time.sleep(15)
+
       f.proc_avb_w(driver, race_count, env_mens)
 
    except Exception:
