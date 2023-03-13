@@ -1439,7 +1439,7 @@ def status_cat_med(cats_dog, cat_race):
     else:
         med_cat = 0
 
-    if tipo_race != "O":
+    if tipo_race != "O" and tipo_race != "H" :
         if med_cat < int(cat_race[0][1:]):
             status = 2
         elif med_cat == int(cat_race[0][1:]):
@@ -1572,8 +1572,20 @@ def compara_av(id_race, dog_A, dog_B):
     d_brt_a = abs(diferenca_em_dias(dog_a[3]))
     d_brt_b = abs(diferenca_em_dias(dog_b[3]))
 
-    hist_a = f_busca.buscar_corridas_por_dog_dist(dog_a[0], race_dist[0])
-    hist_b = f_busca.buscar_corridas_por_dog_dist(dog_b[0], race_dist[0])
+    hist_a = []
+    hist_b = []
+
+    histo_a = f_busca.buscar_corridas_por_dog_dist(dog_a[0], race_dist[0])
+    histo_b = f_busca.buscar_corridas_por_dog_dist(dog_b[0], race_dist[0])
+
+    for i in range(0, len(histo_a)):
+        if histo_a[i][9] > 0:
+            hist_a.append(histo_a[i])
+
+    for i in range(0, len(histo_b)):
+        if histo_b[i][9] > 0:
+            hist_b.append(histo_b[i])
+
 
     splits_a = []
     tempos_a = []
@@ -2074,10 +2086,10 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
                 tot_b = tot_b + 4
 
         # media de tempo + quantidade de races + variação media
-        if a[7] > b[7] and a[15] >= 3 and a[8] < 0.2:
+        if a[7] > b[7] and abs(a[7] - b[7]) > 0.15 and a[15] >= 3 and a[8] < 0.2:
             tot_a = tot_a + 4
 
-        elif b[7] > a[7] and b[15] >= 3 and b[8] < 0.2:
+        elif b[7] > a[7] and abs(a[7] - b[7]) > 0.15 and b[15] >= 3 and b[8] < 0.2:
             tot_b = tot_b + 4
 
         # recuperador vs cansa + categoria
@@ -2108,9 +2120,9 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
                 tot_b = tot_b + 4
 
         #split + mantem
-        if abs(a[4] - b[4]) > 0.15 and a[5] < 2.5 and a[10] >=-0.5:
+        if abs(a[4] - b[4]) > 0.15 and a[5] < 2.5 and a[10] >=0:
             tot_a = tot_a + 4
-        elif abs(b[4] - a[4]) > 0.15 and b[5] < 2.5 and b[10] >=-0.5:
+        elif abs(b[4] - a[4]) > 0.15 and b[5] < 2.5 and b[10] >=0:
             tot_b = tot_b + 4
 
         #brt tempo + data
@@ -2141,9 +2153,9 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
 
 
     if a[15] <= 1:
-        tot_a = 0
+        tot_a = -10
     if b[15] <= 1:
-        tot_b = 0
+        tot_b = -10
 
     venc.append( round(tot_a, 2))
     venc.append(round(tot_b, 2))
