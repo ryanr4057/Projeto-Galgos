@@ -33,21 +33,17 @@ while True:
 
       time.sleep(2)
 
-      pyautogui.click(706,169)
-
-
-      time.sleep(6)
+      time.sleep(2)
 
       driver.switch_to.window(driver.window_handles[1])
 
-     # gal= driver.find_element(By.CLASS_NAME," ovm-ClassificationBarButton ovm-ClassificationBarButton-4 ")
-     # gal.click()
       driver.get('https://www.bet365.com/#/IP/B4')
 
+      # pyautogui.click(289,18)
 
-      #for i in range(27):
-       #  pyautogui.press('tab')
-      #pyautogui.press('enter')
+      # for i in range(14):
+      #    pyautogui.press('tab')
+      # pyautogui.press('enter')
 
       time.sleep(2)
 
