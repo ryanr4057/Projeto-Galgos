@@ -12,6 +12,7 @@ import pyautogui
 
 race_count = 1
 env_mens = []
+env_avb = []
 
 
 while True:
@@ -63,7 +64,7 @@ while True:
 
       # time.sleep(15)
 
-      f.proc_avb_w(driver, race_count, env_mens)
+      f.proc_avb_w(driver, race_count, env_mens, env_avb)
 
    except Exception:
       subprocess.Popen('taskkill /F /IM chrome.exe', shell=True)

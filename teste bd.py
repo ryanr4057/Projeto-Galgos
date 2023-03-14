@@ -6,6 +6,7 @@ import f_bd
 
 
 
+
 funções_.cria_bd()
 
 # erros = f_busca.buscar_dog_erro('00FFF00')

@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import subprocess
 import time
 import bot
+import f_banco_avbs as favb
 
 
 
@@ -35,7 +36,7 @@ def proc_prox_race(driver, race_count):
         race_count = 0
     return driver, race_count
 
-def proc_avb_w(driver, race_count, env_mens):
+def proc_avb_w(driver, race_count, env_mens, env_avb):
     while True:
         n_dogs = []
 
@@ -74,7 +75,17 @@ def proc_avb_w(driver, race_count, env_mens):
                         # print(d_dogs_b[0])
                         # print(venc[11])
                         # print(venc[12])
+                        if venc[11] > venc[12]:
+                            v = 'A'
+                        elif venc[11] < venc[12]:
+                            v = 'B'
+                        else:
+                            v = 'EMPATE'
 
+                        avb = f"{d_dogs_a[1]} v {d_dogs_b[1]}"
+                        if (avb in env_avb) is False:
+                            favb.inserir_avb(pista_nome[0], nome[0], d_dogs_a[1], d_dogs_b[1], odds[i].get_text(), odds[i+1].get_text(), venc[11], venc[12],v, 0)
+                            env_avb.append(avb)
 
                         if venc[11] > venc[12] and abs(venc[11] - venc[12]) > 4 and venc[11] >= 8 and venc[12] < 1.76:
                             if (d_dogs_b[1] != n_dogs[0]):

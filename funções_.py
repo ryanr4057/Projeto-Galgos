@@ -6,7 +6,7 @@ import sqlite3
 import datetime
 import f_bd
 import f_busca
-
+import f_banco_avbs as fa
 
 #funções de coleta para pistas
 def coleta_pistas():
@@ -340,6 +340,7 @@ def cria_bd():
     f_bd.criar_tabela_races()
     f_bd.criar_tabela_dogs()
     f_bd.criar_tabela_corrida()
+    fa.criar_tabela_avbs()
     d = coleta_hist(coleta_dogs_races(coleta_races(coleta_pistas())))
 
 def v_campo(array, driver, tag, t1, t2):
