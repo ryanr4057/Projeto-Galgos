@@ -84,8 +84,11 @@ def proc_avb_w(driver, race_count, env_mens, env_avb):
 
                         avb = f"{d_dogs_a[1]} v {d_dogs_b[1]}"
                         if (avb in env_avb) is False:
-                            favb.inserir_avb(pista_nome[0], nome[0], d_dogs_a[1], d_dogs_b[1], odds[i].get_text(), odds[i+1].get_text(), venc[11], venc[12],v, 0)
-                            env_avb.append(avb)
+                            if venc[11] != -10 and venc[12] != -10:
+                                if venc[11] > 5 or venc[12] > 5:
+                            
+                                    favb.inserir_avb(pista_nome[0], nome[0], d_dogs_a[1], d_dogs_b[1], odds[i].get_text(), odds[i+1].get_text(), venc[11], venc[12],v, 0)
+                                    env_avb.append(avb)
 
                         if venc[11] > venc[12] and abs(venc[11] - venc[12]) > 4 and venc[11] >= 8 and venc[12] < 1.76:
                             if (d_dogs_b[1] != n_dogs[0]):
