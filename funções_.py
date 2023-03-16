@@ -2078,37 +2078,37 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
 
     if race_dist >= 350:
         # 1bend + recuperação
-        if a[5] > b[5] and a[10] > b[10]:
-            if a[5] - b[5] > 0.5 and a[10] - b[10] > 0.5:
+        if a[5] < b[5] and a[10] > b[10]:
+            if b[5] - a[5] > 0.5 and a[10] - b[10] > 0.5:
                 tot_a = tot_a + 4
 
-        elif b[5] > a[5] and b[10] > a[10]:
-            if b[5] - a[5] > 0.5 and b[10] - a[10] > 0.5:
+        elif b[5] < a[5] and b[10] > a[10]:
+            if a[5] - b[5] > 0.5 and b[10] - a[10] > 0.5:
                 tot_b = tot_b + 4
 
         # media de tempo + quantidade de races + variação media
-        if a[7] > b[7] and abs(a[7] - b[7]) > 0.15 and a[15] >= 3 and a[8] < 0.2:
-            tot_a = tot_a + 4
+        if a[7] < b[7] and abs(a[7] - b[7]) > 0.15 and a[15] >= 3 and a[8] < 0.2:
+            tot_a = tot_a + 5
 
-        elif b[7] > a[7] and abs(a[7] - b[7]) > 0.15 and b[15] >= 3 and b[8] < 0.2:
-            tot_b = tot_b + 4
+        elif b[7] < a[7] and abs(a[7] - b[7]) > 0.15 and b[15] >= 3 and b[8] < 0.2:
+            tot_b = tot_b + 5
 
         # recuperador vs cansa + categoria
         if a[10] > b[10] and a[6] < b[6] and (a[12] == 1 or a[12] == 2):
-            if a[5] + a[10] > b[5] + b[10]:
-                if abs((a[5] + a[10]) - (b[5] + b[10])) > 0.5:
+            if a[5] - a[10] < b[5] - b[10]:
+                if abs((a[5] - a[10]) - (b[5] - b[10])) > 0.5:
                     tot_a = tot_a + 4
 
         elif a[10] < b[10] and a[6] > b[6] and (b[12] == 1 or b[12] == 2):
-            if a[5] + a[10] < b[5] + b[10]:
-                if abs((a[5] + a[10]) - (b[5] + b[10])) > 0.5:
+            if a[5] - a[10] < b[5] - b[10]:
+                if abs((a[5] - a[10]) - (b[5] - b[10])) > 0.5:
                     tot_b = tot_b + 4
 
         #media de tempo + categoria
-        if a[7] > b[7] and (a[12] == 1 or a[12] == 2) and b[12] == 0:
+        if a[7] < b[7] and (a[12] == 1 or a[12] == 2) and b[12] == 0:
             if abs(a[7] - b[7]) > 0.3:
                 tot_a = tot_a + 3
-        elif a[7] < b[7] and (b[12] == 1 or b[12] == 2) and a[12] == 0:
+        elif a[7] > b[7] and (b[12] == 1 or b[12] == 2) and a[12] == 0:
             if abs(a[7] - b[7]) > 0.3:
                 tot_b = tot_b + 3
 
@@ -2121,9 +2121,9 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
                 tot_b = tot_b + 4
 
         #split + mantem
-        if abs(a[4] - b[4]) > 0.15 and a[5] < 2.5 and a[10] >=0:
+        if a[4] < b[4] and abs(a[4] - b[4]) > 0.15 and a[5] < 2.5 and a[10] >=0:
             tot_a = tot_a + 4
-        elif abs(b[4] - a[4]) > 0.15 and b[5] < 2.5 and b[10] >=0:
+        elif a[4] > b[4] and abs(b[4] - a[4]) > 0.15 and b[5] < 2.5 and b[10] >=0:
             tot_b = tot_b + 4
 
         #brt tempo + data
