@@ -9,10 +9,15 @@ from selenium.webdriver.support import expected_conditions as EC
 import subprocess
 import time
 import pyautogui
+import funções_ as ff
+
+# ff.cria_bd()
+# time.sleep(45)
 
 race_count = 1
 env_mens = []
 env_avb = []
+
 
 
 while True:

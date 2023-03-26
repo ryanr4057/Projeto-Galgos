@@ -4,12 +4,17 @@ from datetime import datetime
 data_atual = datetime.now().strftime('%d-%m-%Y')
 
 conn = sqlite3.connect(f'banco_de_dados{ data_atual}.sqlite3')
+# conn = sqlite3.connect('banco_de_dados23-03-2023.sqlite3')
+
 conn.execute("PRAGMA foreign_keys = ON")
 c = conn.cursor()
 
 # Busca de elementos na tabela pistas
 def buscar_pista(id):
     c.execute("SELECT * FROM pistas WHERE id = ?", (id,))
+    return c.fetchone()
+def buscar_pista_id_r(r_id):
+    c.execute("SELECT pista_id FROM races WHERE id = ?", (r_id,))
     return c.fetchone()
 
 def buscar_pista_nome(id):

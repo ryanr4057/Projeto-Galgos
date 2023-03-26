@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.common.exceptions import UnexpectedAlertPresentException
 import re
 import time
 import sqlite3
@@ -7,6 +8,8 @@ import datetime
 import f_bd
 import f_busca
 import f_banco_avbs as fa
+import pyautogui
+
 
 #funções de coleta para pistas
 def coleta_pistas():
@@ -59,13 +62,22 @@ def coleta_races(pistas_links):
     driver = webdriver.Chrome()
 
     for i in range(0, len(pistas_links)):
-
+        # try:
         url =f'https://greyhoundbet.racingpost.com/{pistas_links[i]}'
         driver.get(url)
         driver.refresh
         time.sleep(1.5)
+        try:
+            html = driver.page_source
+        except UnexpectedAlertPresentException:
+            time.sleep(3)
+            pyautogui.press('enter')
+            driver.refresh()
+            time.sleep(2)
+            # alert = driver.switch_to.alert
+            # alert.accept()
+            html = driver.page_source
 
-        html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
         races = soup.find_all('a', {'data-eventid': 'cards_card'})
         ra = coleta_races_aux(races)
@@ -74,6 +86,9 @@ def coleta_races(pistas_links):
         if pistas_races == [] :
             driver.quit()
             pistas_races = coleta_races(pistas_links)
+        # except UnexpectedAlertPresentException:
+        #     alert = driver.switch_to.alert
+        #     alert.dismiss()
 
     driver.quit()
 
@@ -1440,7 +1455,7 @@ def status_cat_med(cats_dog, cat_race):
     else:
         med_cat = 0
 
-    if tipo_race != "O" and tipo_race != "H" :
+    if tipo_race != "O" and tipo_race != "H" and tipo_race != "T" and tipo_race != "I" :
         if med_cat < int(cat_race[0][1:]):
             status = 2
         elif med_cat == int(cat_race[0][1:]):
@@ -1849,6 +1864,7 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
     tot_a = 0
     tot_b = 0
     venc = []
+    metodo = ''
 
     #dias sem correr
     if a[2] > b[2]:
@@ -2080,59 +2096,79 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
         # 1bend + recuperação
         if a[5] < b[5] and a[10] > b[10]:
             if b[5] - a[5] > 0.5 and a[10] - b[10] > 0.5:
-                tot_a = tot_a + 4
+                tot_a = tot_a + 6
+                metodo = metodo + "1bend + recuperação // "
+
 
         elif b[5] < a[5] and b[10] > a[10]:
             if a[5] - b[5] > 0.5 and b[10] - a[10] > 0.5:
-                tot_b = tot_b + 4
-
-        # media de tempo + quantidade de races + variação media
-        if a[7] < b[7] and abs(a[7] - b[7]) > 0.15 and a[15] >= 3 and a[8] < 0.2:
-            tot_a = tot_a + 5
-
-        elif b[7] < a[7] and abs(a[7] - b[7]) > 0.15 and b[15] >= 3 and b[8] < 0.2:
-            tot_b = tot_b + 5
+                tot_b = tot_b + 6
+                metodo = metodo + "1bend + recuperação // "
 
         # recuperador vs cansa + categoria
         if a[10] > b[10] and a[6] < b[6] and (a[12] == 1 or a[12] == 2):
             if a[5] - a[10] < b[5] - b[10]:
                 if abs((a[5] - a[10]) - (b[5] - b[10])) > 0.5:
-                    tot_a = tot_a + 4
+                    tot_a = tot_a + 6
+                    metodo = metodo + "rec cansa + cat. // "
 
         elif a[10] < b[10] and a[6] > b[6] and (b[12] == 1 or b[12] == 2):
             if a[5] - a[10] < b[5] - b[10]:
                 if abs((a[5] - a[10]) - (b[5] - b[10])) > 0.5:
-                    tot_b = tot_b + 4
+                    tot_b = tot_b + 6
+                    metodo = metodo + "rec cansa + cat. // "
+
+        # media de tempo + quantidade de races + variação media
+        if a[7] < b[7] and abs(a[7] - b[7]) > 0.15 and a[15] >= 3 and a[8] < 0.2:
+            tot_a = tot_a + 5
+            metodo = metodo + "med. tempo + qtd races + var. media // "
+
+        elif b[7] < a[7] and abs(a[7] - b[7]) > 0.15 and b[15] >= 3 and b[8] < 0.2:
+            tot_b = tot_b + 5
+            metodo = metodo + "med. tempo + qtd races + var. media // "
 
         #media de tempo + categoria
-        if a[7] < b[7] and (a[12] == 1 or a[12] == 2) and b[12] == 0:
+        elif a[7] < b[7] and (a[12] == 1 or a[12] == 2) and b[12] == 0:
             if abs(a[7] - b[7]) > 0.3:
-                tot_a = tot_a + 3
+                tot_a = tot_a + 4
+                metodo = metodo + "med. tempo + cat // "
+
         elif a[7] > b[7] and (b[12] == 1 or b[12] == 2) and a[12] == 0:
             if abs(a[7] - b[7]) > 0.3:
-                tot_b = tot_b + 3
+                tot_b = tot_b + 4
+                metodo = metodo + "med. tempo + cat // "
 
         #media de tempo + variação media
-        if (a[7] + a[8]) < (b[7] - b[8]):
+        elif (a[7] + a[8]) < (b[7] - b[8]):
             if(abs((a[7] + a[8]) - (b[7] - b[8])) > 0.1):
                 tot_a = tot_a + 4
+                metodo = metodo + "med. tempo + var. media // "
+
         elif (a[7] + a[8]) > (b[7] - b[8]):
             if(abs((a[7] + a[8]) - (b[7] - b[8])) > 0.1):
                 tot_b = tot_b + 4
+                metodo = metodo + "med. tempo + var. media // "
 
         #split + mantem
         if a[4] < b[4] and abs(a[4] - b[4]) > 0.15 and a[5] < 2.5 and a[10] >=0:
-            tot_a = tot_a + 4
+            tot_a = tot_a + 6
+            metodo = metodo + "split + mantem // "
+
         elif a[4] > b[4] and abs(b[4] - a[4]) > 0.15 and b[5] < 2.5 and b[10] >=0:
-            tot_b = tot_b + 4
+            tot_b = tot_b + 6
+            metodo = metodo + "split + mantem // "
 
         #brt tempo + data
         if (a[13] < b[13]) and abs(a[13] - b[13]) > 0.15:
             if (a[14] < b[14]) and a[14] < 17:
-                tot_a = tot_a + 4
+                tot_a = tot_a + 3
+                metodo = metodo + "brt tempo + data // "
+
         elif (a[13] > b[13]) and abs(a[13] - b[13]) > 0.15:
             if (b[14] < a[14]) and b[14] < 17:
-                tot_b = tot_b + 4
+                tot_b = tot_b + 3
+                metodo = metodo + "brt tempo + data // "
+
 
     #races curtas
     elif race_dist < 350:
@@ -2140,17 +2176,25 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
         if a[5] < b[5] and abs(a[5] - b[5]) > 1:
             if a[7] < b[7] and abs(a[7] - b[7]) > 0.15:
                 tot_a = tot_a + 4
+                metodo = metodo + "1bend + recuperação // "
+
         elif b[5] < a[5] and abs(a[5] - b[5]) > 1:
             if b[7] < a[7] and abs(a[7] - b[7]) > 0.15:
                 tot_b = tot_b + 4
+                metodo = metodo + "1bend + recuperação // "
+
 
         #media de tempo + variação media
         if (a[7] + a[8]) < (b[7] - b[8]):
             if(abs((a[7] + a[8]) - (b[7] - b[8])) > 0.1):
                 tot_a = tot_a + 4
+                metodo = metodo + "med. tempo + var. media // "
+
         elif (a[7] + a[8]) > (b[7] - b[8]):
             if(abs((a[7] + a[8]) - (b[7] - b[8])) > 0.1):
                 tot_b = tot_b + 4
+                metodo = metodo + "med. tempo + var. media // "
+
 
 
     if a[15] <= 1:
@@ -2160,6 +2204,7 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
 
     venc.append( round(tot_a, 2))
     venc.append(round(tot_b, 2))
+    venc.append(metodo)
 
     # print(venc)
     return(venc)
