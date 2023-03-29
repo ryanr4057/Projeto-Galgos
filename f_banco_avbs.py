@@ -4,7 +4,7 @@ from datetime import datetime
 data_atual = datetime.now().strftime('%d-%m-%Y')
 
 conn = sqlite3.connect(f'AvBs_{data_atual}.sqlite3')
-# conn = sqlite3.connect('AvBs_24-03-2023.sqlite3')
+# conn = sqlite3.connect('AvBs_23-03-2023.sqlite3')
 conn.execute("PRAGMA foreign_keys = ON")
 c = conn.cursor()
 
@@ -56,3 +56,6 @@ def buscar_id_avb(nome):
     c.execute("SELECT id FROM avbs WHERE dog_a == ?", (nome,))
     return c.fetchone()
 
+def busca_nomes(id):
+    c.execute("SELECT * FROM avbs WHERE id == ?", (id,))
+    return c.fetchone()

@@ -69,7 +69,7 @@ while True:
 
       # time.sleep(15)
 
-      f.proc_avb_w(driver, race_count, env_mens, env_avb)
+      f.proc_avb_ia(driver, race_count, env_mens, env_avb)
 
    except Exception:
       subprocess.Popen('taskkill /F /IM chrome.exe', shell=True)

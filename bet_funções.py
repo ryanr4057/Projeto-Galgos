@@ -15,9 +15,12 @@ import pickle
 
 bot_mens = []
 
-ia = pickle.load(open('IA_81%.sav', 'rb'))
+# ia = pickle.load(open('IA_81%.sav', 'rb'))
 
-rf = pickle.load(open('forest.sav', 'rb'))
+# rf = pickle.load(open('forest.sav', 'rb'))
+
+# scaler = pickle.load(open('scaler.sav', 'rb'))
+
 
 def proc_prox_race(driver, race_count):
     p_race = driver.find_elements(By.CLASS_NAME,"ipn-FixtureNoScores_Wrapper")
@@ -77,32 +80,30 @@ def proc_avb_w(driver, race_count, env_mens, env_avb):
 
                     if dog_a != None and dog_b != None:
 
-                        prev = iaa.previsao_ia(a,b,ia,rf)
-
-                        if prev[0] == 0:
-                            mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA PADRÃO \n f1"
-                            ind = mensagem.find('@')
-                            v_men = mensagem[:ind]
-                            if (v_men in bot_mens) is False:
-                                if len(off) == 0:
-                                    bot.mens_telegram_ia(mensagem)
-                                    bot_mens.append(v_men)
-
-
-                        elif prev[0] == 1:
-                            mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA PADRÃO \n f2"
-                            ind = mensagem.find('@')
-                            v_men = mensagem[:ind]
-                            if (v_men in bot_mens) is False:
-                                if len(off) == 0:
-                                    bot.mens_telegram_ia(mensagem)
-                                    bot_mens.append(v_men)
-
-
-
-
-
                         d_dogs_a, d_dogs_b, venc = f.compara_av(race_id, a, b )
+
+                        if (venc[11] >= 7 and venc[12] < 2) or (venc[12] >= 7 and venc[11] < 2):
+
+                            prev = iaa.previsao_ia(a,b)
+
+                            if prev[0] == 0:
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA PADRÃO \n f1"
+                                ind = mensagem.find('@')
+                                v_men = mensagem[:ind]
+                                if (v_men in bot_mens) is False:
+                                    if len(off) == 0:
+                                        bot.mens_telegram_ia(mensagem)
+                                        bot_mens.append(v_men)
+
+                            elif prev[0] == 1:
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA PADRÃO \n f2"
+                                ind = mensagem.find('@')
+                                v_men = mensagem[:ind]
+                                if (v_men in bot_mens) is False:
+                                    if len(off) == 0:
+                                        bot.mens_telegram_ia(mensagem)
+                                        bot_mens.append(v_men)
+
                         # print(d_dogs_a[0])
                         # print(d_dogs_b[0])
                         # print(venc[11])
@@ -241,6 +242,106 @@ def proc_avb_w(driver, race_count, env_mens, env_avb):
                                             if len(off) == 0:
                                                 bot.mens_telegram(mensagem)
                                                 env_mens.append(v_mens)
+
+            driver, race_count = proc_prox_race(driver, race_count)
+            time.sleep(1)
+
+        else:
+            driver, race_count = proc_prox_race(driver, race_count)
+            time.sleep(1)
+
+def proc_avb_ia(driver, race_count, env_mens, env_avb):
+    while True:
+        n_dogs = []
+
+        avb_dogs = driver.find_elements(By.CLASS_NAME,"ir-RacingGreyhoundsMatchUpParticipant_Name")
+        all_dogs = driver.find_elements(By.CLASS_NAME,"ir-RacingGreyhoundsFixedOddsParticipant_ParticipantName ")
+        off = driver.find_elements(By.CLASS_NAME,"ir-RaceOffBanner ")
+
+        # print(len(off))
+        for i in range(0, len(all_dogs) -1):
+            n_dogs.append(all_dogs[i].text)
+
+        if len(avb_dogs) > 0:
+            html = driver.page_source
+            soup = BeautifulSoup(html, 'html.parser')
+            dogs = soup.find_all('span', {'class': 'ir-RacingGreyhoundsMatchUpParticipant_Name'})
+            odds = soup.find_all('span', {'class': 'ir-RacingGreyhoundsMatchUpParticipant_Odds'})
+            race_id = fbd.buscar_dog_rid(dogs[0].get_text().strip())
+            if race_id != None:
+                horario = fbd.buscar_race_h(race_id[0])
+                nome = fbd.buscar_race_nome(race_id[0])
+                pista_id = fbd.buscar_race_pis(race_id[0])
+                pista_nome = fbd.buscar_pista_nome(pista_id[0])
+                r_dist = fbd.buscar_race_dist(race_id)
+                r_cat = fbd.buscar_race_cat(race_id)
+                for i in range(0, len(dogs), 2):
+                    a = dogs[i].get_text().strip()
+                    b = dogs[i+1].get_text().strip()
+
+                    dog_a = fbd.buscar_dog_nome(a)
+                    dog_b = fbd.buscar_dog_nome(b)
+
+                    if dog_a != None and dog_b != None:
+
+                        d_dogs_a, d_dogs_b, venc = f.compara_av(race_id, a, b)
+
+
+                        if venc[11] > venc[12]:
+                            v = 'A'
+                        elif venc[11] < venc[12]:
+                            v = 'B'
+                        else:
+                            v = 'EMPATE'
+
+                        avb = f"{d_dogs_a[1]} v {d_dogs_b[1]}"
+                        if (avb in env_avb) is False:
+                            if venc[11] != -10 and venc[12] != -10:
+                                if venc[11] > 5 or venc[12] > 5:
+
+                                    favb.inserir_avb(pista_nome[0], nome[0], d_dogs_a[1], d_dogs_b[1], odds[i].get_text(), odds[i+1].get_text(), venc[11], venc[12],v, 0)
+                                    env_avb.append(avb)
+                        predict = iaa.previsao(a, b, venc)
+
+                        if predict == 0 and (d_dogs_a[12] !=3 and d_dogs_b[12] !=3):
+                            odd = float(odds[i].get_text())
+                            if (odd > 1.59) and (odd <= 2.00):
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA PADRÃO \n f1"
+                                ind = mensagem.find('@')
+                                v_mens = mensagem[:ind]
+                                if (v_mens in env_mens) is False:
+                                    if len(off) == 0:
+                                        bot.mens_telegram_ia(mensagem)
+                                        env_mens.append(v_mens)
+
+                            elif venc[11] >= 10 and (odd <= 2.25):
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA ARRISCADA \n f1"
+                                ind = mensagem.find('@')
+                                v_mens = mensagem[:ind]
+                                if (v_mens in env_mens) is False:
+                                    if len(off) == 0:
+                                        bot.mens_telegram_ia(mensagem)
+                                        env_mens.append(v_mens)
+
+                        elif predict == 1 and (d_dogs_a[12] !=3 and d_dogs_b[12] !=3):
+                            odd = float(odds[i].get_text())
+                            if (odd > 1.59) and (odd <= 2.00):
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA PADRÃO \n f1"
+                                ind = mensagem.find('@')
+                                v_mens = mensagem[:ind]
+                                if (v_mens in env_mens) is False:
+                                    if len(off) == 0:
+                                        bot.mens_telegram_ia(mensagem)
+                                        env_mens.append(v_mens)
+
+                            elif venc[11] >= 10 and (odd <= 2.25):
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA ARRISCADA \n f2"
+                                ind = mensagem.find('@')
+                                v_mens = mensagem[:ind]
+                                if (v_mens in env_mens) is False:
+                                    if len(off) == 0:
+                                        bot.mens_telegram_ia(mensagem)
+                                        env_mens.append(v_mens)
 
             driver, race_count = proc_prox_race(driver, race_count)
             time.sleep(1)

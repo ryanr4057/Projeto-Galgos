@@ -15,7 +15,7 @@ conn = sqlite3.connect('IA_bd.sqlite3')
 
 df = pd.read_sql_query("SELECT * from dados", conn)
 
-X = df.drop(labels=['id', 'vencedor'], axis=1)
+X = df.drop(labels=['id', 'vencedor','d_brt_a', 'd_brt_b'], axis=1)
 y = df.vencedor
 
 rf = RandomForestClassifier(n_estimators=124, random_state=1, max_depth=3, max_leaf_nodes=5 )
@@ -31,13 +31,13 @@ scaler = MinMaxScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-cls = MLPClassifier(hidden_layer_sizes=(11,15),
-                    learning_rate_init=0.001,
+cls = MLPClassifier(hidden_layer_sizes=(18),
+                    # learning_rate_init=0.002,
                     max_iter=10000,
                     random_state=1,
-                    beta_1= 0.99996,
-                    beta_2= 0.00001,
-                    # alpha = 0.01,
+                    # beta_1= 0.84 ,
+                    # beta_2= 0.999999,
+                    # alpha = 0.0000002943,
                     # verbose= True,
 
                     )
@@ -47,11 +47,17 @@ print(accuracy_score(y_test, cls.predict(X_test)))
 print(cls.predict(X_test))
 print(y_test.values)
 # print(y_test)
+prob = cls.predict_proba(X_test)
+print(prob[0])
+
 
 filename = 'IA_81%.sav'
 pickle.dump(cls, open(filename, 'wb'))
 
 pickle.dump(rf, open('forest.sav', 'wb'))
+
+pickle.dump(scaler, open('scaler.sav', 'wb'))
+
 
 
 
