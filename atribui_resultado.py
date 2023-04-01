@@ -16,7 +16,7 @@ avbs = fbd.buscar_todos_avb()
 
 driver = webdriver.Chrome()
 
-url ='https://greyhoundbet.racingpost.com/#results-list/r_date=2023-03-28'
+url ='https://greyhoundbet.racingpost.com/#results-list/r_date=2023-03-30'
 driver.get(url)
 time.sleep(2)
 

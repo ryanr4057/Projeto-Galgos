@@ -11,13 +11,15 @@ import time
 import pyautogui
 import funções_ as ff
 
-# ff.cria_bd()
+try:
+   ff.cria_bd()
+except Exception:
+   print("")
 # time.sleep(45)
 
 race_count = 1
 env_mens = []
 env_avb = []
-
 
 
 while True:

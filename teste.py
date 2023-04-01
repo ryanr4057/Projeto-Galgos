@@ -78,74 +78,105 @@ def testa_pb():
     count = 0
     tot = 0
     marg = 0.9
+    marg_b = 0.7
     t =0
 
     for i in range(1, len(all_avbs) + 1):
         avb = faaa.busca_nomes(i)
-        a = avb[3]
-        b = avb[4]
-        pred, pb, stc_a, stc_b, venc = previsao_ia_t(a,b)
+        if avb != None:
+            a = avb[3]
+            b = avb[4]
+            pred, pb, stc_a, stc_b, venc = previsao_ia_t(a,b)
 
-        if pred[0] == avb[10]:
+            if pred[0] == avb[10]:
+                if pb > marg:
+                    if venc[11] > venc[12] and pred[0] == 0 and venc[11] >= 7 and venc[12] <2:
+                        count = count + 1
+                        t = t + pb
+                        print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 1")
+
+                    elif venc[11] > 8 and pred[0] == 0:
+                        count = count + 1
+                        t = t + pb
+                        print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} 3")
+
+                    if venc[11] < venc[12] and pred[0] == 1 and venc[12] >= 7 and venc[11] <2:
+                        count = count + 1
+                        t = t + pb
+                        print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 2")
+
+                    elif venc[12] > 8 and pred[0] == 1:
+                        count = count + 1
+                        t = t + pb
+                        print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} 4")
+                elif pb > marg_b:
+
+                    if venc[11] < venc[12] and pred[0] == 1 and venc[12] >= 8 and venc[11] <2:
+                        count = count + 1
+                        t = t + pb
+                        print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} b1")
+
+                    elif venc[12] > 10 and pred[0] == 1:
+                        count = count + 1
+                        t = t + pb
+                        print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} b2")
+
+
+
             if pb > marg:
-                if venc[11] > venc[12] and pred[0] == 0:
-                    count = count + 1
-                    t = t + pb
-                    print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 1")
-                elif venc[11] < venc[12] and pred[0] == 1:
-                    count = count + 1
-                    t = t + pb
-                    print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 2")
-                elif venc[11] > 7 and pred[0] == 0:
-                    count = count + 1
-                    t = t + pb
-                    print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} 3")
-                elif venc[12] > 7 and pred[0] == 1:
-                    count = count + 1
-                    t = t + pb
-                    print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} 4")
 
-        if pb > marg:
-            # if (pred[0] == avb[10] and (venc[11] > 7 or venc[12] > 7))  or (venc[11] > venc[12] and pred[0] == 0) or (pred[0] != avb[10] and ((pred[0] == 0 and venc[11] > 7 ) or (pred[0] == 1 and venc[12] > 7 ))) :
-            #     tot = tot + 1
-            #     print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} tot1")
-            # elif (pred[0] == avb[10] and (venc[11] > 7 or venc[12] > 7))  or (venc[11] < venc[12] and pred[0] == 1) or (pred[0] != avb[10] and ((pred[0] == 0 and venc[11] > 7 ) or (pred[0] == 1 and venc[12] > 7 ))) :
-            #     tot = tot + 1
-            #     print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} tot2")
+                if venc[11] > venc[12] and pred[0] == 0 and venc[11] >= 7 and venc[12] <2:
+                    tot = tot + 1
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} t1")
+                elif venc[11] < venc[12] and pred[0] == 1 and venc[12] >= 7 and venc[11] <2:
+                    tot = tot + 1
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} t2")
+                elif venc[11] > 8 and pred[0] == 0:
+                    tot = tot + 1
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} t3")
+                elif venc[12] > 8 and pred[0] == 1:
+                    tot = tot + 1
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} t4")
 
-            # print(f"{stc_a} - {stc_b} - {avb[10]}")
-            if venc[11] > venc[12] and pred[0] == 0:
-                tot = tot + 1
-                print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} t1")
-            elif venc[11] < venc[12] and pred[0] == 1:
-                tot = tot + 1
-                print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} t2")
-            elif venc[11] > 7 and pred[0] == 0:
-                tot = tot + 1
-                print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} t3")
-            elif venc[12] > 7 and pred[0] == 1:
-                tot = tot + 1
-                print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} t4")
+            elif pb > marg_b:
 
+                if venc[11] < venc[12] and pred[0] == 1 and venc[12] >= 8 and venc[11] <2:
+                    tot = tot + 1
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} tb1")
+
+                elif venc[12] > 10 and pred[0] == 1:
+                    tot = tot + 1
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} tb2")
+
+            # if pred[0] == 1 and venc[12] >= 7 and venc[11] <2:
+            #     print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} --{i} -b")
 
     print(" ")
 
     for i in range(1, len(all_avbs) + 1):
         avb = faaa.busca_nomes(i)
-        a = avb[3]
-        b = avb[4]
-        pred, pb, stc_a, stc_b, venc = previsao_ia_t(a,b)
+        if avb != None:
 
-        if pred[0] != avb[10]:
-            if pb > marg:
-                if ((venc[11] > venc[12] and pred[0] == 0) and (pred[0] == 0 and venc[11] > 7)) :
-                    print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 1")
-                elif (venc[11] < venc[12] and pred[0] == 1) and (pred[0] == 1 and venc[12] > 7):
-                    print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 2")
-                elif (venc[11] > venc[12] and pred[0] == 0):
-                    print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 3")
-                elif (venc[11] < venc[12] and pred[0] == 1):
-                    print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 4")
+            a = avb[3]
+            b = avb[4]
+            pred, pb, stc_a, stc_b, venc = previsao_ia_t(a,b)
+
+            if pred[0] != avb[10]:
+                if pb > marg:
+                    if ((venc[11] > venc[12] and pred[0] == 0) and (pred[0] == 0 and venc[11] >= 7 and venc[12] < 2)) :
+                        print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 1")
+                    elif (venc[11] < venc[12] and pred[0] == 1) and (pred[0] == 1 and venc[12] >= 7 and venc[11] < 2):
+                        print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 2")
+                    elif (venc[11] > venc[12] and pred[0] == 0 and venc[11] > 8):
+                        print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 3")
+                    elif (venc[11] < venc[12] and pred[0] == 1 and venc[12] > 8):
+                        print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} 4")
+
+                elif pb > marg_b:
+                    if (venc[11] < venc[12] and pred[0] == 1) and (pred[0] == 1 and venc[12] >= 8 and venc[11] < 2):
+                        print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} b1")
+                    elif (venc[11] < venc[12] and pred[0] == 1 and venc[12] > 10):
+                        print(f" erros {stc_a} - {stc_b} - {avb[10]} - {venc[11]} - {venc[12]} --{i} b2")
 
     print(count)
     print(tot)
@@ -154,35 +185,99 @@ def testa_pb():
 
 def previsao(a,b,venc):
     marg = 0.9
+    marg_b = 0.7
+
     vencedor = 3
+    risco = 3
 
     pred, pb = previsao_ia(a,b)
-    print(pred[0])
-    print(pb)
+    print(f"{pred} - {pb}")
+    # print(pred[0])
+    # print(pb)
 
     if pb > marg:
-        if venc[11] > venc[12] and pred[0] == 0 and (venc[11] > 5 and venc[12] < 2) :
-            vencedor = 0
+        if pred[0] == 0:
+            if venc[11] > venc[12]  and (venc[11] >= 7 and venc[12] < 2) :
+                vencedor = 0
+                risco = 0
+            elif venc[11] > 8 and pred[0] == 0:
+                vencedor = 0
+                risco = 1
 
-        elif venc[11] < venc[12] and pred[0] == 1 and (venc[12] > 5 and venc[11] < 2):
-            vencedor = 1
+        if pred[0] == 1:
+            if venc[11] < venc[12] and (venc[12] >= 7 and venc[11] < 2):
+                vencedor = 1
+                risco = 0
+            elif venc[12] > 8 and pred[0] == 1:
+                vencedor = 1
+                risco = 1
 
-        elif venc[11] > 7 and pred[0] == 0:
-            vencedor = 0
+    if pb > marg_b:
+        if pred[0] == 1:
+            if venc[11] < venc[12] and (venc[12] >= 8 and venc[11] < 2):
+                vencedor = 1
+                risco = 1
+            elif venc[12] > 10 and pred[0] == 1:
+                vencedor = 1
+                risco = 1
 
-        elif venc[12] > 7 and pred[0] == 1:
-            vencedor = 1
-
-    return vencedor
+    return vencedor, risco
 
 # testa_pb()
 
-avb = faaa.busca_nomes(18)
-a = avb[3]
-b = avb[4]
+# avb = faaa.busca_nomes(18)
+# a = avb[3]
+# b = avb[4]
 
-race_id = fbd.buscar_dog_rid(a)
-r_dist = fbd.buscar_race_dist(race_id)
-d_a, d_b, venc = f.compara_av(race_id,a,b)
+# race_id = fbd.buscar_dog_rid(a)
+# r_dist = fbd.buscar_race_dist(race_id)
+# d_a, d_b, venc = f.compara_av(race_id,a,b)
 
-print(previsao(a,b, venc))
+# print(previsao(a,b, venc))
+
+def result_b():
+    all_avbs = faaa.buscar_todos_avb()
+    count = 0
+    tot = 0
+    marg = 0.9
+    t =0
+    med_a = 0
+    c_a = 0
+    t_a = 0
+    med_b = 0
+    c_b = 0
+    t_b = 0
+
+    for i in range(1, len(all_avbs) + 1):
+        avb = faaa.busca_nomes(i)
+
+        if avb != None:
+            a = avb[3]
+            b = avb[4]
+            pred, pb, stc_a, stc_b, venc = previsao_ia_t(a,b)
+
+            if pred[0] == avb[10]:
+                if pred[0] == 1 and venc[12] >= 7 and venc[11] <2:
+                    c_b = c_b + 1
+                    t_b = t_b + pb
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} - {pb} --{avb[0]} -b")
+                elif pred[0] == 1 and venc[12] > 8:
+                    c_b = c_b + 1
+                    t_b = t_b + pb
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} - {pb} --{avb[0]} -b")
+                if pred[0] == 0 and venc[11] >= 7 and venc[12] <2:
+                    c_a = c_a + 1
+                    t_a = t_a + pb
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} - {pb} --{avb[0]} -a")
+                elif pred[0] == 0 and venc[11] > 8:
+                    c_a = c_a + 1
+                    t_a = t_a + pb
+                    print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} - {pb} --{avb[0]} -a")
+
+    med_a = t_a/c_a
+    med_b = t_b/c_b
+
+    print(f"{med_a} - {c_a}")
+    print(f"{med_b} - {c_b}")
+
+# result_b()
