@@ -15,7 +15,7 @@ try:
    ff.cria_bd()
 except Exception:
    print("")
-# time.sleep(45)
+# # time.sleep(45)
 
 race_count = 1
 env_mens = []
