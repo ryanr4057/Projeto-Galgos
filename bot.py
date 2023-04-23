@@ -52,8 +52,6 @@ def mens_telegram_ia_ft(buffer,text):
 
     asyncio.run(enviar_mensagem())
 
-
-
 def cria_mens(odd, vencedor, risco, a, b, race_id):
     d_dogs_a, d_dogs_b, venc = f.compara_av(race_id, a, b)
 
@@ -113,9 +111,9 @@ def cria_mens(odd, vencedor, risco, a, b, race_id):
              ["cat ult race:", d_dogs_a[16], "---", d_dogs_b[16]],
              ["odds:", odd[0], "---", odd[1]]]
 
-    table_str = tabulate(table, headers=["", "A", "DIF", "B"], tablefmt="grid", colalign=("left","center","center","center") )
+    table_str = tabulate(table, headers=["", "A", "DIF", "B"], tablefmt="grid", colalign=("left","right","center","left") )
 
-    print(table_str)
+    # print(table_str)
 
     mens = f"{dados_race} \n\n{metodo_a}\n{metodo_b}\n \n{t_vencedor}\nVENCE\n{t_perdedor}\n{risc}\nLink:aaaaaa"
 
@@ -189,14 +187,13 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
              ["cats anteriores:", d_dogs_a[16], "---", d_dogs_b[16]],
              ["odds:", odd[0], "---", odd[1]]]
 
-    table_str = tabulate(table, headers=["", "A", "DIF", "B"], tablefmt="grid", colalign=("left","center","center","center") )
+    table_str = tabulate(table, headers=["", "A", "DIF", "B"], tablefmt="grid", colalign=("left","right","center","left") )
 
-    print(table_str)
+    # print(table_str)
 
     text = f"{dados_race}\n \n{t_vencedor}\nVENCE\n{t_perdedor}\n \n{metodo_a}\n{metodo_b}\nENTRADA {risc}\nLink:{link}"
 
-
-    largura = 1600
+    largura = 1900
     altura = 1300
 
     # Criar uma nova imagem em memória
@@ -220,9 +217,8 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
     mens_telegram_ia_ft(buffer,text)
 
 
-
-# a = 'Crystal Wild'
-# b = 'Borna Bee'
+# a = 'Zari Mike'
+# b = 'Carneys Peaches'
 # race_id = fbd.buscar_dog_rid(a)
 
 # odds = [1.75,2.00]

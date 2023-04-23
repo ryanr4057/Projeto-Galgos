@@ -44,7 +44,7 @@ def previsao_ia(n_a, n_b):
         # print(prob[0][1])
         pb = prob[0][1]
 
-    return res, pb
+    return res, pb, d_a[16], d_b[16]
 
 def previsao_ia_t(n_a, n_b):
     race_id = fbd.buscar_dog_rid(n_a)
@@ -192,18 +192,22 @@ def previsao(a,b,venc):
     vencedor = 3
     risco = 3
 
-    pred, pb = previsao_ia(a,b)
+    pred, pb, cats_a, cats_b = previsao_ia(a,b)
     print(f"{pred} - {pb}")
     # print(pred[0])
     # print(pb)
 
     if pb > marg:
         if pred[0] == 0:
-            if venc[11] > venc[12]  and (venc[11] >= 7 and venc[12] < 2) :
+            if venc[11] > venc[12]  and (venc[11] >= 7 and venc[12] < 2):
                 vencedor = 0
                 risco = 0
             elif venc[11] > 8 and pred[0] == 0:
                 vencedor = 0
+                risco = 1
+            if ("T" in cats_a):
+                risco = 1
+            if ("OR" in cats_b):
                 risco = 1
 
         if pred[0] == 1:
@@ -213,21 +217,19 @@ def previsao(a,b,venc):
             elif venc[12] > 8 and pred[0] == 1:
                 vencedor = 1
                 risco = 1
+            if ("T" in cats_b):
+                risco = 1
+            if ("OR" in cats_a):
+                risco = 1
 
-    # if pb > marg_b:
-    #     if pred[0] == 1:
-    #         if venc[11] < venc[12] and (venc[12] >= 8 and venc[11] < 2):
-    #             vencedor = 1
-    #             risco = 1
-    #         elif venc[12] > 10 and pred[0] == 1:
-    #             vencedor = 1
-    #             risco = 1
+        if ("HP" in cats_a) or ("HP" in cats_b):
+            risco = 1
 
     return vencedor, risco
 
 # testa_pb()
 
-# avb = faaa.busca_nomes(18)
+# avb = faaa.busca_nomes(33)
 # a = avb[3]
 # b = avb[4]
 

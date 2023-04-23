@@ -632,9 +632,22 @@ def compara(id_race, dog_A, dog_B):
 
 def calcula_media(array):
     total = 0
+
     for i in range(0, len(array)):
         total = total + array[i]
-    media = round(total/len(array), 2)
+    media = round(total/(len(array)), 2)
+    return(media)
+
+def calcula_media_spl(array):
+    total = 0
+    tot = 0
+    for i in range(0, len(array)):
+        total = total + array[i]
+        if array[i] > 0:
+            tot += 1
+    if tot == 0:
+        tot = 1
+    media = round(total/tot, 2)
     return(media)
 
 def diferenca_em_dias(data_string):
@@ -1633,7 +1646,7 @@ def compara_av(id_race, dog_A, dog_B):
         peso_a = 0
 
     if len(splits_a) >= 1:
-        m_split_a = calcula_media(splits_a)
+        m_split_a = calcula_media_spl(splits_a)
     else:
         m_split_a = 20
 
@@ -1726,7 +1739,7 @@ def compara_av(id_race, dog_A, dog_B):
         peso_b = 0
 
     if len(splits_b) >= 1:
-        m_split_b = calcula_media(splits_b)
+        m_split_b = calcula_media_spl(splits_b)
     else:
         m_split_b = 10
 
@@ -2055,16 +2068,16 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
 
     if race_dist >= 350:
         # 1bend + recuperação
-        if a[5] < b[5] and a[10] > b[10]:
+        if a[5] < b[5] and a[10] > b[10] and (a[12] >= b[12]):
             if b[5] - a[5] > 0.5 and a[10] - b[10] > 0.5:
                 tot_a = tot_a + 6
-                metodo_a = metodo_a + "1bend + recuperação // "
+                metodo_a = metodo_a + "1bend + recuperação + cat // "
 
 
-        elif b[5] < a[5] and b[10] > a[10]:
+        elif b[5] < a[5] and b[10] > a[10] and (b[12] >= a[12]):
             if a[5] - b[5] > 0.5 and b[10] - a[10] > 0.5:
                 tot_b = tot_b + 6
-                metodo_b = metodo_b + "1bend + recuperação // "
+                metodo_b = metodo_b + "1bend + recuperação + cat // "
 
         # recuperador vs cansa + categoria
         if a[10] > b[10] and a[6] < b[6] and (a[12] == 1 or a[12] == 2):
@@ -2102,12 +2115,12 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
         #media de tempo + variação media
         elif (a[7] + a[8]) < (b[7] - b[8]):
             if(abs((a[7] + a[8]) - (b[7] - b[8])) > 0.1):
-                tot_a = tot_a + 4
+                tot_a = tot_a + 3
                 metodo_a = metodo_a + "med. tempo + var. media // "
 
-        elif (a[7] + a[8]) > (b[7] - b[8]):
-            if(abs((a[7] + a[8]) - (b[7] - b[8])) > 0.1):
-                tot_b = tot_b + 4
+        elif (a[7] - a[8]) > (b[7] + b[8]):
+            if(abs((a[7] - a[8]) - (b[7] + b[8])) > 0.1):
+                tot_b = tot_b + 3
                 metodo_b = metodo_b + "med. tempo + var. media // "
 
         #split + mantem

@@ -380,7 +380,7 @@ def proc_avb_ia(driver, race_count, env_mens, env_avb):
                                             env_mens.append(v_mens)
 
                             elif (odd <= 2.25):
-                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*🥇TRAP: {d_dogs_b[0]}- {d_dogs_b[1]}*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]}\nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url}\n ENTRADA ARRISCADA"
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n🥇*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]}*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]}\nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url}\n ENTRADA ARRISCADA"
                                 # av_men = cria_mens(oddss,1,risco,a,b,race_id, driver)
                                 ind = mensagem.find('@')
                                 v_mens = mensagem[:ind]
