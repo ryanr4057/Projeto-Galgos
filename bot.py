@@ -185,6 +185,7 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
              ["status da cat:", d_dogs_a[12], "---", d_dogs_b[12]],
              ["n races c/ dist:", d_dogs_a[15], "---", d_dogs_b[15]],
              ["cats anteriores:", d_dogs_a[16], "---", d_dogs_b[16]],
+             ["cats media:", d_dogs_a[17], "---", d_dogs_b[17]],
              ["odds:", odd[0], "---", odd[1]]]
 
     table_str = tabulate(table, headers=["", "A", "DIF", "B"], tablefmt="grid", colalign=("left","right","center","left") )
@@ -194,7 +195,7 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
     text = f"{dados_race}\n \n{t_vencedor}\nVENCE\n{t_perdedor}\n \n{metodo_a}\n{metodo_b}\nENTRADA {risc}\nLink:{link}"
 
     largura = 1900
-    altura = 1300
+    altura = 1350
 
     # Criar uma nova imagem em memória
     imagem = Image.new("RGB", (largura, altura), color="black")

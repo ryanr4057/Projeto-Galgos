@@ -1505,7 +1505,7 @@ def status_cat_med(cats_dog, cat_race):
         else:
             print(f'nao entrou na cat {cats_dog[i]}')
 
-    return(status)
+    return status, med_cat
 
 def index_prox_race(id_pista):
     i_races = f_busca.buscar_races_por_pista_i(id_pista)
@@ -1706,7 +1706,7 @@ def compara_av(id_race, dog_A, dog_B):
         for i in range(0, len(hist_a)):
             cats_a.append(hist_a[i][8])
             cat_ant_a = cat_ant_a + f"{hist_a[i][8]},"
-        status_cat_a = status_cat_med(cats_a, race_cat)
+        status_cat_a, med_cat_a = status_cat_med(cats_a, race_cat)
     else:
         status_cat_a = 3
 
@@ -1727,6 +1727,8 @@ def compara_av(id_race, dog_A, dog_B):
     d_dog_a.append(d_brt_a)
     d_dog_a.append(len(hist_a))
     d_dog_a.append(cat_ant_a)
+    d_dog_a.append(med_cat_a)
+
 
 
     # print(d_dog_a)
@@ -1800,7 +1802,7 @@ def compara_av(id_race, dog_A, dog_B):
         for i in range(0, len(hist_b)):
             cats_b.append(hist_b[i][8])
             cat_ant_b = cat_ant_b + f"{hist_b[i][8]},"
-        status_cat_b = status_cat_med(cats_b, race_cat)
+        status_cat_b, med_cat_b = status_cat_med(cats_b, race_cat)
     else:
         status_cat_b = 3
 
@@ -1821,6 +1823,7 @@ def compara_av(id_race, dog_A, dog_B):
     d_dog_b.append(d_brt_b)
     d_dog_b.append(len(hist_b))
     d_dog_b.append(cat_ant_b)
+    d_dog_b.append(med_cat_b)
 
 
     # print(d_dog_b)
@@ -2068,25 +2071,25 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
 
     if race_dist >= 350:
         # 1bend + recuperação
-        if a[5] < b[5] and a[10] > b[10] and (a[12] >= b[12]):
+        if a[5] < b[5] and a[10] > b[10] and (a[12] >= b[12]) and (a[7] < b[7]):
             if b[5] - a[5] > 0.5 and a[10] - b[10] > 0.5:
                 tot_a = tot_a + 6
                 metodo_a = metodo_a + "1bend + recuperação + cat // "
 
 
-        elif b[5] < a[5] and b[10] > a[10] and (b[12] >= a[12]):
+        elif b[5] < a[5] and b[10] > a[10] and (b[12] >= a[12]) and (a[7] > b[7]):
             if a[5] - b[5] > 0.5 and b[10] - a[10] > 0.5:
                 tot_b = tot_b + 6
                 metodo_b = metodo_b + "1bend + recuperação + cat // "
 
         # recuperador vs cansa + categoria
-        if a[10] > b[10] and a[6] < b[6] and (a[12] == 1 or a[12] == 2):
+        if a[10] > b[10] and a[6] < b[6] and (a[12] == 1 or a[12] == 2) and (a[7] < b[7]):
             if a[5] - a[10] < b[5] - b[10]:
                 if abs((a[5] - a[10]) - (b[5] - b[10])) > 0.5:
                     tot_a = tot_a + 6
                     metodo_a = metodo_a + "rec cansa + cat. // "
 
-        elif a[10] < b[10] and a[6] > b[6] and (b[12] == 1 or b[12] == 2):
+        elif a[10] < b[10] and a[6] > b[6] and (b[12] == 1 or b[12] == 2) and (a[7] > b[7]):
             if a[5] - a[10] < b[5] - b[10]:
                 if abs((a[5] - a[10]) - (b[5] - b[10])) > 0.5:
                     tot_b = tot_b + 6
@@ -2124,21 +2127,21 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
                 metodo_b = metodo_b + "med. tempo + var. media // "
 
         #split + mantem
-        if a[4] < b[4] and abs(a[4] - b[4]) > 0.15 and a[5] < 2.5 and a[10] >=0:
+        if a[4] < b[4] and abs(a[4] - b[4]) > 0.15 and a[5] < 2.5 and a[10] >=0 and (a[7] < b[7]):
             tot_a = tot_a + 6
             metodo_a = metodo_a + "split + mantem // "
 
-        elif a[4] > b[4] and abs(b[4] - a[4]) > 0.15 and b[5] < 2.5 and b[10] >=0:
+        elif a[4] > b[4] and abs(b[4] - a[4]) > 0.15 and b[5] < 2.5 and b[10] >=0 and (a[7] > b[7]):
             tot_b = tot_b + 6
             metodo_b = metodo_b + "split + mantem // "
 
         #brt tempo + data
-        if (a[13] < b[13]) and abs(a[13] - b[13]) > 0.15:
+        if (a[13] < b[13]) and abs(a[13] - b[13]) > 0.15 and (a[7] < b[7]):
             if (a[14] < b[14]) and a[14] < 17:
                 tot_a = tot_a + 3
                 metodo_a = metodo_a + "brt tempo + data // "
 
-        elif (a[13] > b[13]) and abs(a[13] - b[13]) > 0.15:
+        elif (a[13] > b[13]) and abs(a[13] - b[13]) > 0.15 and (a[7] > b[7]):
             if (b[14] < a[14]) and b[14] < 17:
                 tot_b = tot_b + 3
                 metodo_b = metodo_b + "brt tempo + data // "
