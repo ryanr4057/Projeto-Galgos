@@ -1505,7 +1505,7 @@ def status_cat_med(cats_dog, cat_race):
         else:
             print(f'nao entrou na cat {cats_dog[i]}')
 
-    return status, med_cat
+    return status, round(med_cat,2)
 
 def index_prox_race(id_pista):
     i_races = f_busca.buscar_races_por_pista_i(id_pista)
