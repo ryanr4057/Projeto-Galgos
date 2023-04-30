@@ -15,7 +15,7 @@ try:
    ff.cria_bd()
 except Exception:
    print("")
-# time.sleep(45)
+# # time.sleep(45)
 
 race_count = 1
 env_mens = []
@@ -74,12 +74,6 @@ while True:
       f.proc_avb_ia(driver, race_count, env_mens, env_avb)
 
    except Exception:
+      print(Exception.__cause__)
       subprocess.Popen('taskkill /F /IM chrome.exe', shell=True)
       time.sleep(5)
-
-
-
-
-
-
-

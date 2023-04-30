@@ -5,11 +5,13 @@ import f_busca as fbd
 import pickle
 from sklearn.neural_network import MLPClassifier
 from sklearn.feature_selection import SelectFromModel
+import warnings
+warnings.filterwarnings("ignore", message="X does not have valid feature names, but MinMaxScaler was fitted with feature names")
 
 
 ia = pickle.load(open('IA_81%.sav', 'rb'))
 
-rf = pickle.load(open('forest.sav', 'rb'))
+# rf = pickle.load(open('forest.sav', 'rb'))
 
 scaler = pickle.load(open('scaler.sav', 'rb'))
 
@@ -22,12 +24,12 @@ def previsao_ia(n_a, n_b):
     race_id = fbd.buscar_dog_rid(n_a)
     r_dist = fbd.buscar_race_dist(race_id)
     d_a, d_b, venc = f.compara_av(race_id,n_a, n_b)
-    X = [[r_dist[0], d_a[0], d_a[2], d_a[3], d_a[4] ,d_a[5], d_a[6], d_a[7], d_a[8], d_a[9], d_a[10], d_a[11], d_a[12], d_a[13], venc[11], d_b[0], d_b[2], d_b[3], d_b[4] ,d_b[5], d_b[6], d_b[7], d_b[8], d_b[9], d_b[10], d_b[11], d_b[12], d_b[13], venc[12]]]
+    X = [[ d_a[0], d_a[2], d_a[3], d_a[4] ,d_a[5], d_a[6], d_a[7], d_a[8], d_a[9], d_a[10], d_a[11], d_a[12], d_a[13], d_b[0], d_b[2], d_b[3], d_b[4] ,d_b[5], d_b[6], d_b[7], d_b[8], d_b[9], d_b[10], d_b[11], d_b[12], d_b[13]]]
 
-    selector = SelectFromModel(rf, prefit=True)
-    X = selector.transform(X)
+    # selector = SelectFromModel(rf, prefit=True)
+    # X = selector.transform(X)
 
-    X = scaler.transform(X)
+    # X = scaler.transform(X)
 
     res = ia.predict(X)
     prob = ia.predict_proba(X)
@@ -42,7 +44,7 @@ def previsao_ia(n_a, n_b):
         # print(prob[0][1])
         pb = prob[0][1]
 
-    return res, pb
+    return res, pb, d_a[16], d_b[16]
 
 def previsao_ia_t(n_a, n_b):
     race_id = fbd.buscar_dog_rid(n_a)
@@ -50,10 +52,10 @@ def previsao_ia_t(n_a, n_b):
     d_a, d_b, venc = f.compara_av(race_id,n_a, n_b)
     stc_a = d_a[12]
     stc_b = d_b[12]
-    X = [[r_dist[0], d_a[0], d_a[2], d_a[3], d_a[4] ,d_a[5], d_a[6], d_a[7], d_a[8], d_a[9], d_a[10], d_a[11], d_a[12], d_a[13], venc[11], d_b[0], d_b[2], d_b[3], d_b[4] ,d_b[5], d_b[6], d_b[7], d_b[8], d_b[9], d_b[10], d_b[11], d_b[12], d_b[13], venc[12]]]
+    X = [[ d_a[0], d_a[2], d_a[3], d_a[4] ,d_a[5], d_a[6], d_a[7], d_a[8], d_a[9], d_a[10], d_a[11], d_a[12], d_a[13], d_b[0], d_b[2], d_b[3], d_b[4] ,d_b[5], d_b[6], d_b[7], d_b[8], d_b[9], d_b[10], d_b[11], d_b[12], d_b[13]]]
 
-    selector = SelectFromModel(rf, prefit=True)
-    X = selector.transform(X)
+    # selector = SelectFromModel(rf, prefit=True)
+    # X = selector.transform(X)
 
     X = scaler.transform(X)
 
@@ -184,24 +186,28 @@ def testa_pb():
     print(t/count)
 
 def previsao(a,b,venc):
-    marg = 0.9
-    marg_b = 0.7
+    marg = 0.85
+    marg_b = 0.85
 
     vencedor = 3
     risco = 3
 
-    pred, pb = previsao_ia(a,b)
+    pred, pb, cats_a, cats_b = previsao_ia(a,b)
     print(f"{pred} - {pb}")
     # print(pred[0])
     # print(pb)
 
     if pb > marg:
         if pred[0] == 0:
-            if venc[11] > venc[12]  and (venc[11] >= 7 and venc[12] < 2) :
+            if venc[11] > venc[12]  and (venc[11] >= 7 and venc[12] < 2):
                 vencedor = 0
                 risco = 0
             elif venc[11] > 8 and pred[0] == 0:
                 vencedor = 0
+                risco = 1
+            if ("T" in cats_a):
+                risco = 1
+            if ("OR" in cats_b):
                 risco = 1
 
         if pred[0] == 1:
@@ -211,21 +217,19 @@ def previsao(a,b,venc):
             elif venc[12] > 8 and pred[0] == 1:
                 vencedor = 1
                 risco = 1
+            if ("T" in cats_b):
+                risco = 1
+            if ("OR" in cats_a):
+                risco = 1
 
-    if pb > marg_b:
-        if pred[0] == 1:
-            if venc[11] < venc[12] and (venc[12] >= 8 and venc[11] < 2):
-                vencedor = 1
-                risco = 1
-            elif venc[12] > 10 and pred[0] == 1:
-                vencedor = 1
-                risco = 1
+        if ("HP" in cats_a) or ("HP" in cats_b):
+            risco = 1
 
     return vencedor, risco
 
 # testa_pb()
 
-# avb = faaa.busca_nomes(18)
+# avb = faaa.busca_nomes(33)
 # a = avb[3]
 # b = avb[4]
 

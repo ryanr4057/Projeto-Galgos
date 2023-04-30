@@ -4,7 +4,7 @@ from datetime import datetime
 data_atual = datetime.now().strftime('%d-%m-%Y')
 
 conn = sqlite3.connect(f'AvBs_{data_atual}.sqlite3')
-# conn = sqlite3.connect('AvBs_24-03-2023.sqlite3')
+# conn = sqlite3.connect('AvBs_17-04-2023.sqlite3')
 conn.execute("PRAGMA foreign_keys = ON")
 c = conn.cursor()
 
