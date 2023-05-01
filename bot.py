@@ -15,14 +15,14 @@ def mens_telegram(message_text):
 
     bot = telegram.Bot(api_token)
 
-    chat_id = '-1001725044307'
+    chat_id = '-1001949296920'
     # message_text = 'Olá, este é um teste de mensagem enviada pelo bot do Telegram!'
 
 
     async def enviar_mensagem():
         await bot.send_message(chat_id=chat_id, text=message_text, parse_mode='Markdown')
 
-    # asyncio.run(enviar_mensagem())
+    asyncio.run(enviar_mensagem())
 
 def mens_telegram_ia(message_text):
     api_token = '6051737713:AAExOZfgQOU3UgeYu9bP7w3Jv7pzED2PQ9k'
@@ -234,3 +234,4 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
 
 # cria_mens(odds,0,0,a,b,race_id)
 
+mens_telegram('aaaa')
