@@ -1569,6 +1569,7 @@ def compara_av(id_race, dog_A, dog_B):
     rec_cansa_a = []
     splits_fin_a = []
 
+
     splits_b = []
     tempos_b = []
     pos_b = []
@@ -1576,6 +1577,7 @@ def compara_av(id_race, dog_A, dog_B):
     vel_media_b = []
     rec_cansa_b = []
     splits_fin_b = []
+
 
     for i in range(0, len(hist_a)):
         splits_a.append(hist_a[i][5])
@@ -1607,6 +1609,12 @@ def compara_av(id_race, dog_A, dog_B):
         rec_cansa_a.append(rec_c)
         splits_fin_a.append(split_fin)
 
+    ult_tempo_a = ""
+    if len(hist_a) >1:
+        ult_tempo_a += f"{hist_a[0][9]},"
+        ult_tempo_a += f"{hist_a[1][9]},"
+
+
     for i in range(0, len(hist_b)):
         splits_b.append(hist_b[i][5])
         if (hist_b[i][9]) != None:
@@ -1637,6 +1645,11 @@ def compara_av(id_race, dog_A, dog_B):
         pos_1bend_b.append(bend1)
         rec_cansa_b.append(rec_c)
         splits_fin_b.append(split_fin)
+
+    ult_tempo_b = ""
+    if len(hist_b) >1:
+        ult_tempo_b += f"{hist_b[0][9]},"
+        ult_tempo_b += f"{hist_b[1][9]},"
 
     nome_a = dog_a[1]
     trap_a = dog_a[2]
@@ -1701,6 +1714,7 @@ def compara_av(id_race, dog_A, dog_B):
 
     cats_a = []
     cat_ant_a = ''
+    med_cat_a = 0
 
     if len(hist_a) > 0:
         for i in range(0, len(hist_a)):
@@ -1728,6 +1742,7 @@ def compara_av(id_race, dog_A, dog_B):
     d_dog_a.append(len(hist_a))
     d_dog_a.append(cat_ant_a)
     d_dog_a.append(med_cat_a)
+    d_dog_a.append(ult_tempo_a)
 
 
 
@@ -1797,6 +1812,7 @@ def compara_av(id_race, dog_A, dog_B):
     #     status_cat_b = 3
     cats_b = []
     cat_ant_b = ''
+    med_cat_b = 0
 
     if len(hist_b) > 0:
         for i in range(0, len(hist_b)):
@@ -1824,6 +1840,8 @@ def compara_av(id_race, dog_A, dog_B):
     d_dog_b.append(len(hist_b))
     d_dog_b.append(cat_ant_b)
     d_dog_b.append(med_cat_b)
+    d_dog_b.append(ult_tempo_b)
+
 
 
     # print(d_dog_b)

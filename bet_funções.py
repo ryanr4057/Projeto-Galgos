@@ -257,18 +257,20 @@ def proc_avb_ia(driver, race_count, env_mens, env_avb):
         avb_dogs = driver.find_elements(By.CLASS_NAME,"ir-RacingGreyhoundsMatchUpParticipant_Name")
         all_dogs = driver.find_elements(By.CLASS_NAME,"ir-RacingGreyhoundsFixedOddsParticipant_ParticipantName ")
         off = driver.find_elements(By.CLASS_NAME,"ir-RaceOffBanner ")
-
         # print(len(off))
         for i in range(0, len(all_dogs) -1):
             n_dogs.append(all_dogs[i].text)
 
         if len(avb_dogs) > 0:
+            link = driver.current_url
             html = driver.page_source
             soup = BeautifulSoup(html, 'html.parser')
             dogs = soup.find_all('span', {'class': 'ir-RacingGreyhoundsMatchUpParticipant_Name'})
             odds = soup.find_all('span', {'class': 'ir-RacingGreyhoundsMatchUpParticipant_Odds'})
             race_id = fbd.buscar_dog_rid(dogs[0].get_text().strip())
+
             if race_id != None:
+
                 horario = fbd.buscar_race_h(race_id[0])
                 nome = fbd.buscar_race_nome(race_id[0])
                 pista_id = fbd.buscar_race_pis(race_id[0])
@@ -304,35 +306,46 @@ def proc_avb_ia(driver, race_count, env_mens, env_avb):
                         predict, risco = iaa.previsao(a, b, venc)
                         print(f"{predict} - {venc[11]} - {venc[12]} - {d_dogs_a[12]} - {d_dogs_b[12]}")
 
+                        odd_a = float(odds[i].get_text())
+                        odd_b = float(odds[i+1].get_text())
+                        oddss = [odd_a, odd_b]
+
                         if predict == 0 and (d_dogs_a[12] !=3) and (venc[12] !=-10 ):
                             odd = float(odds[i].get_text())
+
                             if (odd >= 1.5) and (odd <= 2.00):
                                 if risco == 0:
-                                    mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA PADRÃO \n f1"
+                                    mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n🥇*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]}*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]}\nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url} \n ENTRADA PADRÃO"
+                                    # av_men = cria_mens(oddss,0,risco,a,b,race_id, driver)
                                     ind = mensagem.find('@')
                                     v_mens = mensagem[:ind]
                                     if (v_mens in env_mens) is False:
                                         if len(off) == 0:
-                                            bot.mens_telegram_ia(mensagem)
+                                            # bot.mens_telegram_ia(av_men)
+                                            bot.bot_mensagem_av(oddss,0,risco,a,b,race_id,link)
                                             bot.mens_telegram(mensagem)
                                             env_mens.append(v_mens)
                                 if risco == 1:
-                                    mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA ARRISCADA \n f1"
+                                    mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n🥇*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]}*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]}\nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url}\n ENTRADA ARRISCADA"
+                                    # av_men = cria_mens(oddss,0,risco,a,b,race_id, driver)
                                     ind = mensagem.find('@')
                                     v_mens = mensagem[:ind]
                                     if (v_mens in env_mens) is False:
                                         if len(off) == 0:
-                                            bot.mens_telegram_ia(mensagem)
+                                            # bot.mens_telegram_ia(av_men)
+                                            bot.bot_mensagem_av(oddss,0,risco,a,b,race_id,link)
                                             bot.mens_telegram(mensagem)
                                             env_mens.append(v_mens)
 
                             elif (odd <= 2.25):
-                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]})*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]}) \nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA ARRISCADA \n f1"
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n🥇*TRAP: {d_dogs_a[0]}- {d_dogs_a[1]}*  \nVENCE: \nTRAP: {d_dogs_b[0]}- {d_dogs_b[1]}\nOdd: @{odds[i].get_text()}💸 \nLink:{driver.current_url} \n ENTRADA ARRISCADA"
+                                # av_men = cria_mens(oddss,0,risco,a,b,race_id, driver)
                                 ind = mensagem.find('@')
                                 v_mens = mensagem[:ind]
                                 if (v_mens in env_mens) is False:
                                     if len(off) == 0:
-                                        bot.mens_telegram_ia(mensagem)
+                                        bot.bot_mensagem_av(oddss,0,risco,a,b,race_id,link)
+                                        # bot.mens_telegram_ia(av_men)
                                         bot.mens_telegram(mensagem)
 
                                         env_mens.append(v_mens)
@@ -341,33 +354,39 @@ def proc_avb_ia(driver, race_count, env_mens, env_avb):
                             odd = float(odds[i+1].get_text())
                             if (odd >= 1.5) and (odd <= 2.00):
                                 if risco == 0:
-                                    mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA PADRÃO \n f2"
+                                    mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n🥇*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]}*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]}\nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url}\n ENTRADA PADRÃO"
+                                    # av_men = cria_mens(oddss,1,risco,a,b,race_id, driver)
                                     ind = mensagem.find('@')
                                     v_mens = mensagem[:ind]
                                     if (v_mens in env_mens) is False:
                                         if len(off) == 0:
-                                            bot.mens_telegram_ia(mensagem)
+                                            bot.bot_mensagem_av(oddss,1,risco,a,b,race_id,link)
+                                            # bot.mens_telegram_ia(av_men)
                                             bot.mens_telegram(mensagem)
 
                                             env_mens.append(v_mens)
                                 if risco == 1:
-                                    mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA ARRISCADA \n f2"
+                                    mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n🥇*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]}*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]}\nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url}\n ENTRADA ARRISCADA"
+                                    # av_men = cria_mens(oddss,1,risco,a,b,race_id, driver)
                                     ind = mensagem.find('@')
                                     v_mens = mensagem[:ind]
                                     if (v_mens in env_mens) is False:
                                         if len(off) == 0:
-                                            bot.mens_telegram_ia(mensagem)
+                                            bot.bot_mensagem_av(oddss,1,risco,a,b,race_id,link)
+                                            # bot.mens_telegram_ia(av_men)
                                             bot.mens_telegram(mensagem)
 
                                             env_mens.append(v_mens)
 
                             elif (odd <= 2.25):
-                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]} ({venc[12]})*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]} ({venc[11]}) \nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url} \n MÉTODO: {venc[13]} \n ENTRADA ARRISCADA \n f2"
+                                mensagem = f"RR TIPS - AvB: 🐶 \n{pista_nome[0]} {horario[0]} - ({nome[0]}) - {r_cat[0]} - {r_dist[0]}m \n🥇*TRAP: {d_dogs_b[0]}- {d_dogs_b[1]}*  \nVENCE: \nTRAP: {d_dogs_a[0]}- {d_dogs_a[1]}\nOdd: @{odds[i+1].get_text()}💸 \nLink:{driver.current_url}\n ENTRADA ARRISCADA"
+                                # av_men = cria_mens(oddss,1,risco,a,b,race_id, driver)
                                 ind = mensagem.find('@')
                                 v_mens = mensagem[:ind]
                                 if (v_mens in env_mens) is False:
                                     if len(off) == 0:
-                                        bot.mens_telegram_ia(mensagem)
+                                        bot.bot_mensagem_av(oddss,1,risco,a,b,race_id,link)
+                                        # bot.mens_telegram_ia(av_men)
                                         bot.mens_telegram(mensagem)
 
                                         env_mens.append(v_mens)
