@@ -43,6 +43,10 @@ def buscar_race_dist(id):
     c.execute("SELECT distancia FROM races WHERE id = ?", (id))
     return c.fetchone()
 
+def buscar_race_pick(id):
+    c.execute("SELECT post_pick FROM races WHERE id = ?", (id))
+    return c.fetchone()
+
 def buscar_race_cat(id):
     c.execute("SELECT categoria FROM races WHERE id = ?", (id))
     return c.fetchone()

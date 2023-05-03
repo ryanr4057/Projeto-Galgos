@@ -7,7 +7,7 @@ tabulate.PRESERVE_WHITESPACE = True
 from texttable import Texttable
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
-import io
+
 
 
 def mens_telegram(message_text):
@@ -171,7 +171,8 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
     metodo_a =f"metodo dog A: {venc[13]}"
     metodo_b =f"metodo dog B: {venc[14]}"
 
-    table = [["TRAP:", d_dogs_a[0], "---", d_dogs_b[0]],
+    table = [["POST PICK:","---" , d_dogs_a[19], "---"],
+             ["TRAP:", d_dogs_a[0], "---", d_dogs_b[0]],
              ["dias s correr:", d_dogs_a[2], round(abs(d_dogs_a[2] - d_dogs_b[2]),2), d_dogs_b[2]],
              ["peso:", d_dogs_a[3], round(abs(d_dogs_a[3] - d_dogs_b[3]),2), d_dogs_b[3]],
              ["m/ split:", d_dogs_a[4], round(abs(d_dogs_a[4] - d_dogs_b[4]),2), d_dogs_b[4]],
@@ -196,7 +197,7 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
     text = f"{dados_race}\n \n{t_vencedor}\nVENCE\n{t_perdedor}\n \n{metodo_a}\n{metodo_b}\nENTRADA {risc}\nLink:{link}"
 
     largura = 1900
-    altura = 1350
+    altura = 1500
 
     # Criar uma nova imagem em memória
     imagem = Image.new("RGB", (largura, altura), color="black")
@@ -219,14 +220,14 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
     mens_telegram_ia_ft(buffer,text)
 
 
-# a = 'Zari Mike'
-# b = 'Carneys Peaches'
-# race_id = fbd.buscar_dog_rid(a)
+a = 'Sheadogue Lad'
+b = 'Brickfield Boxer'
+race_id = fbd.buscar_dog_rid(a)
 
-# odds = [1.75,2.00]
-# link = "aaaaa"
+odds = [1.75,2.00]
+link = "aaaaa"
 
-# bot_mensagem_av(odds,0,0,a,b,race_id, link)
+bot_mensagem_av(odds,0,0,a,b,race_id, link)
 
 
 # mens_telegram_ia_ft(ft,link)
@@ -234,4 +235,4 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
 
 # cria_mens(odds,0,0,a,b,race_id)
 
-mens_telegram('aaaa')
+# mens_telegram('aaaa')

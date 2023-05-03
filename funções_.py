@@ -1534,6 +1534,7 @@ def index_prox_race(id_pista):
 def compara_av(id_race, dog_A, dog_B):
     race_dist = f_busca.buscar_race_dist(id_race)
     race_cat = f_busca.buscar_race_cat(id_race)
+    pick = f_busca.buscar_race_pick(id_race)
     d_dog_a = []
     d_dog_b = []
 
@@ -1559,6 +1560,12 @@ def compara_av(id_race, dog_A, dog_B):
     for i in range(0, len(histo_b)):
         if histo_b[i][9] > 0:
             hist_b.append(histo_b[i])
+
+    if len(hist_a) > 5:
+        hist_a = hist_a[:5]
+
+    if len(hist_b) > 5:
+        hist_b = hist_b[:5]
 
 
     splits_a = []
@@ -1743,6 +1750,8 @@ def compara_av(id_race, dog_A, dog_B):
     d_dog_a.append(cat_ant_a)
     d_dog_a.append(med_cat_a)
     d_dog_a.append(ult_tempo_a)
+    d_dog_a.append(pick[0])
+
 
 
 
@@ -2087,7 +2096,7 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
     # elif b[12] == 0:
     #     tot_b = tot_b - 1.5
 
-    if race_dist >= 350:
+    if (race_dist >= 350) and (abs(a[7] - b[7]) > 0.1):
         # 1bend + recuperação
         if a[5] < b[5] and a[10] > b[10] and (a[12] >= b[12]) and (a[7] < b[7]):
             if b[5] - a[5] > 0.5 and a[10] - b[10] > 0.5:
@@ -2205,13 +2214,3 @@ def compara_dif_av(d_dog_a, d_dog_b, race_dist):
 
     # print(venc)
     return(venc)
-
-
-
-
-
-
-
-
-
-
