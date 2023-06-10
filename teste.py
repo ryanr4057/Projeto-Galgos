@@ -199,7 +199,7 @@ def previsao(a,b,venc):
 
     if pb > marg:
         if pred[0] == 0:
-            if venc[11] > venc[12]  and (venc[11] >= 7 and venc[12] < 2):
+            if venc[11] > venc[12]  and (venc[11] >= 6 and venc[12] < 2):
                 vencedor = 0
                 risco = 0
             elif venc[11] > 8 and pred[0] == 0:
@@ -211,7 +211,7 @@ def previsao(a,b,venc):
                 risco = 1
 
         if pred[0] == 1:
-            if venc[11] < venc[12] and (venc[12] >= 7 and venc[11] < 2):
+            if venc[11] < venc[12] and (venc[12] >= 6 and venc[11] < 2):
                 vencedor = 1
                 risco = 0
             elif venc[12] > 8 and pred[0] == 1:
@@ -227,7 +227,21 @@ def previsao(a,b,venc):
 
     return vencedor, risco
 
+def previsao_tc(a,b,venc):
+
+    pred, pb, cats_a, cats_b = previsao_ia(a,b)
+    # print(f"{pred} - {pb}")
+
+    if pred[0] == 0:
+        vencedor = 0
+
+    if pred[0] == 1:
+        vencedor = 1
+
+    return vencedor
+
 # testa_pb()
+
 
 # avb = faaa.busca_nomes(33)
 # a = avb[3]
@@ -261,7 +275,7 @@ def result_b():
             pred, pb, stc_a, stc_b, venc = previsao_ia_t(a,b)
 
             if pred[0] == avb[10]:
-                if pred[0] == 1 and venc[12] >= 7 and venc[11] <2:
+                if pred[0] == 1 and venc[12] >= 5 and venc[11] <2:
                     c_b = c_b + 1
                     t_b = t_b + pb
                     print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} - {pb} --{avb[0]} -b")
@@ -269,7 +283,7 @@ def result_b():
                     c_b = c_b + 1
                     t_b = t_b + pb
                     print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} - {pb} --{avb[0]} -b")
-                if pred[0] == 0 and venc[11] >= 7 and venc[12] <2:
+                if pred[0] == 0 and venc[11] >= 5 and venc[12] <2:
                     c_a = c_a + 1
                     t_a = t_a + pb
                     print(f"{stc_a} - {stc_b} - {avb[10]} - {pred[0]} - {venc[11]} - {venc[12]} - {pb} --{avb[0]} -a")

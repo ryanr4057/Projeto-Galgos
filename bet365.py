@@ -76,10 +76,3 @@ while True:
    except Exception:
       subprocess.Popen('taskkill /F /IM chrome.exe', shell=True)
       time.sleep(5)
-
-
-
-
-
-
-

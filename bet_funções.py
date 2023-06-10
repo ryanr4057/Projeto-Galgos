@@ -11,6 +11,8 @@ import bot
 import f_banco_avbs as favb
 import teste as iaa
 import pickle
+import pyautogui
+
 
 
 bot_mens = []
@@ -23,10 +25,14 @@ bot_mens = []
 
 
 def proc_prox_race(driver, race_count):
+    pyautogui.click(191,364)
+    time.sleep(0.5)
     p_race = driver.find_elements(By.CLASS_NAME,"ipn-FixtureNoScores_Wrapper")
     if p_race is None:
         driver.refresh()
         time.sleep(2)
+        pyautogui.click(191,364)
+        time.sleep(0.5)
         p_race = driver.find_elements(By.CLASS_NAME,"ipn-FixtureNoScores_Wrapper")
 
     qtd_race = len(p_race) - 1

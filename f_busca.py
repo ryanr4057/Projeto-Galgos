@@ -80,6 +80,10 @@ def buscar_todas_races():
     c.execute("SELECT * FROM races")
     return c.fetchall()
 
+def buscar_todas_races_id():
+    c.execute("SELECT id FROM races")
+    return c.fetchall()
+
 def buscar_races_por_pista(pista_id):
     c.execute("SELECT nome FROM races WHERE pista_id = ?", (pista_id))
     return c.fetchall()
@@ -112,6 +116,10 @@ def buscar_dog_data_brt(id):
 
 def buscar_dog_nome(nome):
     c.execute("SELECT * FROM dogs WHERE nome = ?", (nome,))
+    return c.fetchone()
+
+def buscar_dog_trap(nome):
+    c.execute("SELECT trap FROM dogs WHERE nome = ?", (nome,))
     return c.fetchone()
 
 def buscar_dog_id(nome):

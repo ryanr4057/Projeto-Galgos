@@ -220,14 +220,14 @@ def bot_mensagem_av(odd, vencedor, risco, a, b, race_id, link):
     mens_telegram_ia_ft(buffer,text)
 
 
-a = 'Sheadogue Lad'
-b = 'Brickfield Boxer'
-race_id = fbd.buscar_dog_rid(a)
+# a = 'Sheadogue Lad'
+# b = 'Brickfield Boxer'
+# race_id = fbd.buscar_dog_rid(a)
 
-odds = [1.75,2.00]
-link = "aaaaa"
+# odds = [1.75,2.00]
+# link = "aaaaa"
 
-bot_mensagem_av(odds,0,0,a,b,race_id, link)
+# bot_mensagem_av(odds,0,0,a,b,race_id, link)
 
 
 # mens_telegram_ia_ft(ft,link)

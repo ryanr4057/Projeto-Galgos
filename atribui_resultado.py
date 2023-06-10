@@ -14,7 +14,7 @@ avbs = fbd.buscar_todos_avb()
 
 driver = webdriver.Chrome()
 
-url ='https://greyhoundbet.racingpost.com/#results-list/r_date=2023-03-29'
+url ='https://greyhoundbet.racingpost.com/#results-list/r_date=2023-05-10'
 driver.get(url)
 time.sleep(2)
 
@@ -176,4 +176,6 @@ def atribui_r():
 
         # print(len(pistas))
 
-atribui_r()
+# atribui_r()
+
+att()
