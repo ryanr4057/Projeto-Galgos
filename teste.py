@@ -9,12 +9,13 @@ import warnings
 warnings.filterwarnings("ignore", message="X does not have valid feature names, but MinMaxScaler was fitted with feature names")
 
 
-ia = pickle.load(open('IA_81%.sav', 'rb'))
+# ia = pickle.load(open('IA_81%.sav', 'rb'))
 
-# rf = pickle.load(open('forest.sav', 'rb'))
+# scaler = pickle.load(open('scaler.sav', 'rb'))
 
-scaler = pickle.load(open('scaler.sav', 'rb'))
+ia = pickle.load(open('nova_ia.sav', 'rb'))
 
+scaler = pickle.load(open('new_sc.sav', 'rb'))
 
 
 
@@ -186,7 +187,7 @@ def testa_pb():
     print(t/count)
 
 def previsao(a,b,venc):
-    marg = 0.85
+    marg = 0.9
     marg_b = 0.85
 
     vencedor = 3
@@ -199,7 +200,7 @@ def previsao(a,b,venc):
 
     if pb > marg:
         if pred[0] == 0:
-            if venc[11] > venc[12]  and (venc[11] >= 6 and venc[12] < 2):
+            if venc[11] > venc[12]  and (venc[11] >= 7 and venc[12] < 2):
                 vencedor = 0
                 risco = 0
             elif venc[11] > 8 and pred[0] == 0:
@@ -211,7 +212,7 @@ def previsao(a,b,venc):
                 risco = 1
 
         if pred[0] == 1:
-            if venc[11] < venc[12] and (venc[12] >= 6 and venc[11] < 2):
+            if venc[11] < venc[12] and (venc[12] >= 7 and venc[11] < 2):
                 vencedor = 1
                 risco = 0
             elif venc[12] > 8 and pred[0] == 1:

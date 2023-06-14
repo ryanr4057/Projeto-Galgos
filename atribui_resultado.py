@@ -5,7 +5,6 @@ import cria_bd_avb as avb
 from selenium import webdriver
 import time
 import re
-
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 import pyautogui
